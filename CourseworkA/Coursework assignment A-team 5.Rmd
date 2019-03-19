@@ -5,8 +5,8 @@ author: "Þórunn Arna Ómardóttir (4917499), Nathan Buskulic (4947916), Mitchell D
 date: "4/3/2019"
 
 output:
-    slidy_presentation: 
-   #pdf_document:
+    #slidy_presentation: 
+   pdf_document:
       fig_caption: true
       number_sections: true
 ---
@@ -290,7 +290,7 @@ BonferroniP
 We chose to use the Bonferroni correction to  conduct this post-hoc analysis. There the p-values are multiplied bu the number of comparisons.
 
 
-According to results here above: Madonna vs West has significance that is adjusted to bonferroni of $`r BonferroniP[4]`$,Madonna vs Beyonce has significance that is adjusted to bonferroni of $`r BonferroniP[1]`$ and Beyonce vs West has significance that is adjusted to bonferroni of $`r BonferroniP[2]`$. We can see that the bonferroni adjustment leads to all te p-values to be higher than the p-value obtained in the Anova test above. Since the value for Beyonce and Madonna is close to 1 it tells us that there really is not much difference on the sentiment for the two. But th other two pairs still have a significant difference, that it the sentiment is significantly different between the two persons in the pair.
+According to results here above: Madonna vs West has significance that is adjusted to bonferroni of $`r BonferroniP[4]`$,Madonna vs Beyonce has significance that is adjusted to bonferroni of $`r BonferroniP[1]`$ and Beyonce vs West has significance that is adjusted to bonferroni of $`r BonferroniP[2]`$. We can see that the bonferroni adjustment leads to all te p-values to be higher than the p-value obtained in the Anova test above. Since the value for Beyonce and Madonna is rather close to 1 it tells us that there really is not much difference on the sentiment for the two. But th other two pairs still have a significant difference, that it the sentiment is significantly different between the two persons in the pair.
 
 
 ### Report section for a scientific publication
