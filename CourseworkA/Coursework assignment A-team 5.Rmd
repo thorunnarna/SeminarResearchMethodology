@@ -296,7 +296,7 @@ A linear model was fitted on the number of the sentiment score, comparing the di
 
 ### Conceptual model
 The model can be found in the figure below.
-![Model for the webvisit question](figures/Model_Question_2.png){width=50%}
+![Model for the webvisit question](figures/Model_Question_2.jpeg){width=50%}
 
 ### Visual inspection
 Graphically examine the variation in page visits for different factors levels (e.g. histogram, density plot etc.) 
