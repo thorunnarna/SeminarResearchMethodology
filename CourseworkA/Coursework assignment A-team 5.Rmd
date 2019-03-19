@@ -5,7 +5,8 @@ author: "Þórunn Arna Ómardóttir (4917499), Nathan Buskulic (4947916), Mitchell D
 date: "4/3/2019"
 
 output:
-   pdf_document:
+    slidy_presentation: 
+   #pdf_document:
       fig_caption: true
       number_sections: true
 ---
@@ -165,6 +166,11 @@ consumer_scret <- 'Q6U0Ek1umFvWWGuOVsBOekG7xM5R1cXYkIMx4q85XtWbWqHPo4'
 access_token <- '746835948688805889-q9LEUy2zqL8rigTon9FpqNpH6TkSNvk'
 access_scret <- 'yc3IFL7cQsEMNCLhXuyUvaOv5Wiick0S7scXRU5G0ZICg'
 
+#consumer_key <-'S3HE6pNUsmDP3LxMSDgRw8kx8'
+#consumer_scret <- '1aLg11NynVF4q93uaxHuCkd9GpIZxtaePxlvVZoKHrmPjrQIoC '
+#access_token <- '1079739876080340992-O9MHCV8yIbP4fpCXnktPDKTerIk4i8'
+#access_scret <- 'ZYi6mkuPA2zQDw3jqtK9xKvRWc6Yj7xHmCCwMNLpyI0kY'
+
 source("your_twitter.R") #this file will set my personal variables for my twitter app, adjust the name of this file. use the provide template your_twitter.R
 
 setup_twitter_oauth(consumer_key,consumer_scret, access_token,access_scret) #connect to  twitter app
@@ -217,6 +223,7 @@ subsetWest <-semFrame[which(semFrame$Person == 'West'),]
 ###Conceptual model
 
 Make a conceptual model for the following research question: Is there a difference in the sentiment of the tweets related to the different celebrities?
+
 ![Conceptual model](figures/TwitterConceptualModel.png)
 
 We can see that the sentiment of tweets related to different celebrity is directly connected to the celebrity itself. 
@@ -236,21 +243,25 @@ boxplot(score ~ Person, data=semFrame, main="Boxplot of sentiment for each perso
 leveneTest( semFrame$score,semFrame$Person, center = median)
 ```
 The Levene test results in a very low p-value., therefore the hypothesis of equal variances is rejected and it is concluded that there is a difference between the variances in the pipulation. Therefore the variance is not considered to be homogeneous.
+
 ### Visual inspection
 Graphically examine the variation in tweets' sentiments for each celebrity (e.g. histogram, density plot) 
 
-```{r}
+```{r,fig.width = 5, fig.height =4}
 #include your code and output in the document
+
 hist(subsetBeyonce$score)
 hist(subsetMadonna$score)
 hist(subsetWest$score)
+meanBeyonce<-mean(subsetBeyonce$score)
+meanMadonna<-mean(subsetMadonna$score)
+meanWest<-mean(subsetWest$score)
 ```
 
 
 ### Mean sentiments
-Graphically examine the mean sentiments of tweets for each celebrity
 
-Here below we plot the means of each class using plotmeans from the package gplots. 
+Here below we plot the means of each class using plotmeans from the package gplots.  We can see that the mean for Beyonce is `r meanBeyonce`, for Madonna is `r meanMadonna` and for Kanye West it is `r meanWest`. Where a lower value means that the sentiment analysis is more negative.
 ```{r}
 plotmeans(score ~ Person, data = semFrame,mean.labels = TRUE,connect = FALSE,ylim = c(-0.1,0.8))
 ```
@@ -262,40 +273,38 @@ plotmeans(score ~ Person, data = semFrame,mean.labels = TRUE,connect = FALSE,yli
  model1<- lm(score ~ Person, data = semFrame) #model with predictor
  AnovaResults <-anova(model0,model1)
 ```
- *AnovaResults$`Pr(>F)`[2]*
- For example if the F(2,2997) is 3.74(for one example dataset) and the p = 0.024.
- That means the sentiment of tweets is significantly different depending on what celebrity is mentioned in the tweet.
+
+The calculated f-value, F(2,2997) is `r AnovaResults$F[2]` and the p- value is $`r AnovaResults[2, "Pr(>F)"]`$. since the p- value is so small we can assume that the sentiment of tweets is significantly different depending on what celebrity is mentioned in the tweet.
  
- Other results can be interpreted in the same manner.
+
 
 ### Post Hoc analysis
 If a model that includes the celebrity is better in explaining the sentiments of tweets than a model without such predictor, conduct a post-hoc analysis with e.g. Bonferroni correction, to examine which of celebrity tweets differ from the other celebrity tweets
 
 ```{r}
 #include your code and output in the document
-pairwise.t.test(semFrame$score, semFrame$Person, paired = FALSE, p.adjust.method = "bonferroni")
+BonferroniResults <- pairwise.t.test(semFrame$score, semFrame$Person, paired = FALSE, p.adjust.method = "bonferroni")
+BonferroniP <- BonferroniResults$p.value
+BonferroniP
 ```
-We chose to use the Bonferroni method to  conduct this post-hoc analysis. There the p-values are multiplied bu the number of comparisons.
-
-I will include  the results from a former run and analyse those results. The results from the current run can than be interpreted the same way.
-
-We will analyse these results when 
-Beyonce vs Madonna : 1.2e-14
-Beyonce vs West : 7.5e-05
-Madonna vs West : < 2e-16
+We chose to use the Bonferroni correction to  conduct this post-hoc analysis. There the p-values are multiplied bu the number of comparisons.
 
 
-According to results here above: Madonna vs West has significance that is adjusted to bonferroni of 1.2 e-14, the value can be read in the same manner for the other pairs.So since Beyonce and West have the highest value, they have the lowest significance. And the Tweets for Madonna and West differ the most since they have the lowest p-value.
+According to results here above: Madonna vs West has significance that is adjusted to bonferroni of $`r BonferroniP[4]`$,Madonna vs Beyonce has significance that is adjusted to bonferroni of $`r BonferroniP[1]`$ and Beyonce vs West has significance that is adjusted to bonferroni of $`r BonferroniP[2]`$. We can see that the bonferroni adjustment leads to all te p-values to be higher than the p-value obtained in the Anova test above. Since the value for Beyonce and Madonna is close to 1 it tells us that there really is not much difference on the sentiment for the two. But th other two pairs still have a significant difference, that it the sentiment is significantly different between the two persons in the pair.
+
 
 ### Report section for a scientific publication
-Note that since the most recent Tweets are gathered each time we run the markdown file, the exact numbers of our analysis will change a bit each time.So some assumptions might be a bit distorted.
+According to the analysis we have seen that the sentiment of Tweets is not always significantly correlated to the celebrity.
 
-A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not. According to the analysis we have seen that the sentiment of Tweets is significantly correlated to the celebrity. Then A Post Hoc analysis by the meas of Bonferroni was conducted. That resulted in the fact that the tweets for West and Madonna differ the most. That can be  confirmed by looking at the visualizasion of the means of the tweet sentiment per person.
+First we visualized  the results a bit by looking at the plot of the means of the tweet sentiment per person. We saw that the means for Madonna and Beyonce are closest to each other.
+
+A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained the p value of $`r AnovaResults[2, "Pr(>F)"]`$ which hinted there was significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we saw that the difference of sentiment is not significant for Beyonce and Madonna(p-value of $`r BonferroniP[1]`$ ), but is significant for Kanye West in relation to the other two.(p-values: $`r BonferroniP[2]`$,$`r BonferroniP[4]`$). 
 
 ## Question 2 - Website visits (between groups - Two factors)
 
 ### Conceptual model
 The model can be found in the figure below.
+
 ![Model for the webvisit question](figures/Model_Question_2.jpeg){width=50%}
 
 ### Visual inspection
