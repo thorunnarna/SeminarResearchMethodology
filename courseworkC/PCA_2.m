@@ -14,7 +14,7 @@
 
 
 % ------
-maxImg = 3
+maxImg = 200
 initMatrix = []
 imagefiles = dir('img_align_celeba/*.jpg');      
 nfiles = length(imagefiles);    % Number of files found
@@ -22,6 +22,7 @@ for ii=1:maxImg
     currentfilename = imagefiles(ii).name
     currentimage = imread(strcat('img_align_celeba/',currentfilename));
     currentimage = rgb2gray(currentimage);
+    %imshow(currentimage)
     [h w d]=size(currentimage);
     x = double(reshape(currentimage,w*h,d))/255;
     initMatrix = [initMatrix; x'];
@@ -49,9 +50,9 @@ V = flip(V,2);
 % We get the basis vectors
 U = zeros(size(y,1), size(D,1));
 for i = 1:size(D,1)
-   U(:,i) = (y * V(:,i));% * 3;%(1/(sqrt(D(i,i))))
+   U(:,i) = (y * V(:,i)) * (1/(sqrt(D(i,i))));
 end
-U
+U;
 
 % We project on the new space
 % reconstructedMatrix = zeros(size(initMatrix))
