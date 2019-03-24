@@ -22,12 +22,12 @@ for ii=1:maxImg
     currentfilename = imagefiles(ii).name
     currentimage = imread(strcat('img_align_celeba/',currentfilename));
     currentimage = rgb2gray(currentimage);
-    [h w d]=size(currentimage)
-    x = double(reshape(currentimage,w*h,d))/255
+    [h w d]=size(currentimage);
+    x = double(reshape(currentimage,w*h,d))/255;
     initMatrix = [initMatrix; x'];
     %images{ii} = currentimage;
 end
-initMatrix = initMatrix;
+initMatrix = initMatrix';
 
 % -------
 %%
