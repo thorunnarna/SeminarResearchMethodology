@@ -15,7 +15,7 @@
 
 
 % ------
-maxImg = 10
+maxImg = 200
 initMatrix = []
 imagefiles = dir('C:/Users/thoru/Downloads/img_align_celeba/image_subset/*.jpg');      
 nfiles = length(imagefiles);    % Number of files found
@@ -33,6 +33,7 @@ initMatrix = initMatrix';
 
 % -------
 %%
+tic
 % Get the center
 center = 1/size(initMatrix,2) * sum(initMatrix,2);
 
@@ -48,15 +49,13 @@ covarience = y * y';
 %find the biggest eigenvectos   
 em1=V(:,1);
 
-
-
 matrixCenter = zeros(size(center,1), size(V,2));
 for i = 1:size(V,2)
    matrixCenter(:,i) = center; 
 end
 
-reconstructedMatrix = (initMatrix' * em1 * em1')' + matrixCenter;
+reconstructedMatrix = (y' * em1 * em1')' + matrixCenter;
 reconstructedMatrix;
-
+timeCov = toc
 image =uint8(reshape(mean(reconstructedMatrix,2),h,w,d)*255);
 figure, imshow(image)
