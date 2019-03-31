@@ -1,4 +1,3 @@
-
 % We implement the PCA using the second algorithms
 
 % 1. Get the center of the points
@@ -7,16 +6,12 @@
 % 4. Compute eigenvalues and eigenvectors of the Gram Matrix
 % 5. Compute the basis vector of the affine space
 
-% get the matrix:
-% image=imread('lena_gray.png');
-% [h w d]=size(image);
-% x = double(reshape(image,w*h,d))/255;
-% initMatrix = x;
+% For testing purposes
+% 6. We reconstruct the original matrix by projecting on the new affine
+% space.
 
-
-% ------
-
-maxImg = 1000
+% -----
+maxImg= 1000
 initMatrix = []
 
 Celeb=1
@@ -30,6 +25,7 @@ if Celeb==1
         currentfilename = imagefiles(i).name
         currentimage = imread(strcat(imageDir,currentfilename));
         currentimage = rgb2gray(currentimage);
+        %imshow(currentimage)
         [h w d]=size(currentimage);
         x = double(reshape(currentimage,w*h,d))/255;
         initMatrix = [initMatrix; x'];
@@ -49,8 +45,8 @@ if Flower==1
   for i=1:maxImg
       currentfilename = imagefiles(i).name
       currentimage = imread(strcat(imageDir,currentfilename));
-      rows = [rows size(currentimage,1)]
-      columns = [columns size(currentimage,2)]    
+      rows = [rows size(currentimage,1)];
+      columns = [columns size(currentimage,2)]  ;  
   end
   minRows = min(rows)
   minColumns = min(columns)
@@ -59,11 +55,11 @@ if Flower==1
         currentfilename = imagefiles(i).name
         currentimage = imread(strcat(imageDir,currentfilename));
         currentimage = rgb2gray(currentimage);
-        trimmedImg = trimImage(currentimage,minRows,minColumns);    
-        %trim to resize to 150x150 pixles
-        trimmedImg =imresize(trimmedImg, [150 150]) ;     
+        %trim and resize to 150x150 pixles
+        trimmedImg = trimImage(currentimage,minRows,minColumns);
+        trimmedImg =imresize(trimmedImg, [150 150]);
         [h w d]=size(trimmedImg);
-        %vectorize
+         %vectorize
         x = double(reshape(trimmedImg,w*h,d))/255;
         initMatrix = [initMatrix; x'];
 
@@ -71,44 +67,51 @@ if Flower==1
   initMatrix = initMatrix';
 end
 
-
 % -------
 %%
 tic
 % Get the center
-center = 1/size(initMatrix,2) * sum(initMatrix,2);
+center = mean(initMatrix,2);
 
 % Get the centerd points
 y = initMatrix - center;
 
-% compute the Covarience matrix
-covarience = y * y';
+% get the Gram Matrix
+gram = y' * y;
 
 % get the eigenvalues and eigenvectors
-[V,D] = eigs(covarience,100);
+[V,D] = eig(gram);
+% We change the order of the vectors
+D = rot90(fliplr(D),-1);
+V = flip(V,2);
 
-%find the biggest eigenvectos   
-%em1=V(:,1);
+% We get the basis vectors
+U = zeros(size(y,1), size(D,1));
+for i = 1:size(D,1)
+   U(:,i) = (1/(sqrt(D(i,i)))) * (y * V(:,i));
+end
+U;
 
-matrixCenter = zeros(size(center,1), size(y,2));
-for i = 1:size(y,2)
+% Testing
+% We project on the new space
+matrixCenter = zeros(size(center,1), size(U,2));
+for i = 1:size(U,2)
    matrixCenter(:,i) = center; 
 end
 
-reconstructedMatrix = (y' * V * V')' + matrixCenter;
-reconstructedMatrix;
-timeCov = toc
-image =uint8(reshape(mean(reconstructedMatrix,2),h,w,d)*255);
+reconstructedMatrix = (y' * U * U')' + matrixCenter;
+timeGram = toc
+% We show the mean image
+image = uint8(reshape(mean(reconstructedMatrix,2),h,w,d)*255);
 figure, imshow(image)
-
 memory
 
 %calculate difference
 DiffCov = initMatrix-reconstructedMatrix;
-NormCov =norm(DiffCov)
+NormGram =norm(DiffCov)
 function trimmedImg = trimImage(img,rows,columns)
-    CenterRow = size(img,1)/2
-    CenterColumn = round(size(img,2)/2)
+    CenterRow = size(img,1)/2;
+    CenterColumn = round(size(img,2)/2);
    
     row1 = (CenterRow-rows/2)+1;
     row2 = CenterRow+rows/2;
@@ -116,3 +119,4 @@ function trimmedImg = trimImage(img,rows,columns)
     col2 = CenterColumn+columns/2;
     trimmedImg = img(row1:row2, col1:col2);
 end
+
