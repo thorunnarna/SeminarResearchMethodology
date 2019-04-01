@@ -81,10 +81,8 @@ We will use a one way Analysis of Variance (ANOVA) test between group. Indeed, s
 
 
 ### Collecting tweets, and data preparation
-We collected Tweets for the Three celebrities Beyonce, Madonna and Kanye West.
+We collected Tweets for the three celebrities Beyonce, Madonna and Kanye West.
 The code can be found in the markdown file.
-
-
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, include = FALSE}
 
@@ -180,10 +178,19 @@ setup_twitter_oauth(consumer_key,consumer_scret, access_token,access_scret) #con
 ##  You should replace this with your own celebrities, at least 3, but more preferred 
 ##  Note that it will take the computer some to collect the tweets
 
-tweets_Beyonce <- searchTwitter("#Beyonce", n=1000, lang="en", resultType="recent") #1000 recent tweets about Beyonce, in English 
+tweets_Beyonce <- searchTwitter("#Beyonce", n=1000, lang="en", resultType="recent") #1000 recent tweets about Beyonce, in English
 tweets_Madonna <- searchTwitter("#Madonna", n=1000, lang="en", resultType="recent") #1000 recent tweets about Madonna
 tweets_West <- searchTwitter("#West", n=1000, lang="en", resultType="recent") #1000 recent tweets about Kanye West
 
+# Save an object to a file
+saveRDS(tweets_Beyonce, file = "tweets_Beyonce.rds")
+saveRDS(tweets_Madonna, file = "tweets_Madonna.rds")
+saveRDS(tweets_West, file = "tweets_West.rds")
+##Restore the object
+
+# tweets_Beyonce =readRDS( file = "tweets_Beyonce.rds")
+# tweets_Madonna =readRDS( file = "tweets_Madonna.rds")
+# tweets_West =readRDS( file = "tweets_West.rds")
 
 ######################## Sentiment analysis
 
@@ -298,7 +305,9 @@ According to the analysis we have seen that the sentiment of Tweets is not alway
 
 First we visualized  the results a bit by looking at the plot of the means of the tweet sentiment per person. We saw that the means for Madonna and Beyonce are closest to each other.
 
-A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained the p value of $`r AnovaResults[2, "Pr(>F)"]`$ which hinted there was significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we saw that the difference of sentiment is not significant for Beyonce and Madonna(p-value of $`r BonferroniP[1]`$ ), but is significant for Kanye West in relation to the other two.(p-values: $`r BonferroniP[2]`$,$`r BonferroniP[4]`$). 
+A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained the p value of $`r AnovaResults[2, "Pr(>F)"]`$ which hinted there was significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we saw that the difference of sentiment is not significant for Beyonce and Madonna(p-value of $`r BonferroniP[1]`$ ), but is significant for Kanye West vs Madonna and Beyonce (p-values: $`r BonferroniP[2]`$,$`r BonferroniP[4]`$).
+
+
 
 ## Question 2 - Website visits (between groups - Two factors)
 
@@ -308,7 +317,7 @@ The model can be found in the figure below.
 ![Model for the webvisit question](figures/Model_Question_2.jpeg){width=50%}
 
 ### Visual inspection
-Graphically examine the variation in page visits for different factors levels (e.g. histogram, density plot etc.) 
+Graphically examine the variation in page visits for different factors levels (e.g. histogram, density plot etc.)
 
 
 ```{r}
@@ -361,10 +370,10 @@ If the analysis shows a significant two-way interaction effect, conduct a Simple
 
 
 ```{r}
-myData$simple <- interaction(myData$version, myData$portal) #merge two factors 
+myData$simple <- interaction(myData$version, myData$portal) #merge two factors
 
-contrastConsummer <-c(1,-1,0,0) #Only the consummer portal data 
-contrastCompany <-c(0,0,1,-1) #Only the company portal data 
+contrastConsummer <-c(1,-1,0,0) #Only the consummer portal data
+contrastCompany <-c(0,0,1,-1) #Only the company portal data
 
 SimpleEff <- cbind(contrastConsummer,contrastCompany)
 contrasts(myData$simple) <- SimpleEff #now we link the two contrasts with the factor simple
@@ -437,7 +446,7 @@ model1 <- lm(log(price) ~ accel)
 model2 <- lm(log(price) ~ accel + mpg)
 model3 <- lm(log(price) ~ accel + mpg + year)
 
-pander(anova(model0,model1,model2,model3), 
+pander(anova(model0,model1,model2,model3),
        caption = "Model comparison to predict the price of a car")
 ```
 
@@ -488,9 +497,9 @@ plot(d$cooks)
 ### Report section for a scientific publication
 In this section we briefly present the results of fitting a linear regression model in order to predict the price of cars using data on their acceleration rate, their fuel efficiency in miles per gallon, and their build year.
 
-First of all we can conclude that a logarithmic transformation was necessary to increase normality of the distribution of the price variable. While the distribution still significantly differs from a normal one (W = 0.973, p = 0.004), it is an improvement over the original distribution (W = 0.853, p = 4.3e-11). Furthermore, the transformation was necessary to justify the choice of performing linear regression, as without it the assumptions for linear regression do not hold, especially the linearity assumption. 
+First of all we can conclude that a logarithmic transformation was necessary to increase normality of the distribution of the price variable. While the distribution still significantly differs from a normal one (W = 0.973, p = 0.004), it is an improvement over the original distribution (W = 0.853, p = 4.3e-11). Furthermore, the transformation was necessary to justify the choice of performing linear regression, as without it the assumptions for linear regression do not hold, especially the linearity assumption.
 
-Inspecting the scatter plots, it becomes clear that a linear relationschip between the natural logarithm of price and the year the car was built is absent. The scatter plots of the other two variables show some indication that a relationship might exist. 
+Inspecting the scatter plots, it becomes clear that a linear relationschip between the natural logarithm of price and the year the car was built is absent. The scatter plots of the other two variables show some indication that a relationship might exist.
 
 Fitting the model revealed that the year variable is indeed not able to explain any additional variance in the price variable on top of the accel and mpg variables (F = 0.088, p = 0.77). Based on this result we decided to exclude the independent variable year from the model. Hence we end up with the following model:
 
