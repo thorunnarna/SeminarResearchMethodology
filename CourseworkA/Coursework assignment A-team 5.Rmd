@@ -81,7 +81,7 @@ We will use a one way Analysis of Variance (ANOVA) test between group. Indeed, s
 
 
 ### Collecting tweets, and data preparation
-We collected Tweets for the three celebrities Beyonce, Madonna and Kanye West.
+We collected Tweets for the three celebrities Beyonce, Madonna and '' MickaelJackson.
 The code can be found in the markdown file.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, include = FALSE}
@@ -158,45 +158,45 @@ clearTweets <- function(tweets, excl) {
 
 ################# Collect from Twitter
 
-# for creating a twitter app (apps.twitter.com) see youtube https://youtu.be/lT4Kosc_ers
-consumer_key <-'k9vUb4jWT1EoYRoCEsE3s8vnc'
-consumer_scret <- 'Q6U0Ek1umFvWWGuOVsBOekG7xM5R1cXYkIMx4q85XtWbWqHPo4'
-access_token <- '746835948688805889-q9LEUy2zqL8rigTon9FpqNpH6TkSNvk'
-access_scret <- 'yc3IFL7cQsEMNCLhXuyUvaOv5Wiick0S7scXRU5G0ZICg'
-
-#consumer_key <-'S3HE6pNUsmDP3LxMSDgRw8kx8'
-#consumer_scret <- '1aLg11NynVF4q93uaxHuCkd9GpIZxtaePxlvVZoKHrmPjrQIoC '
-#access_token <- '1079739876080340992-O9MHCV8yIbP4fpCXnktPDKTerIk4i8'
-#access_scret <- 'ZYi6mkuPA2zQDw3jqtK9xKvRWc6Yj7xHmCCwMNLpyI0kY'
-
-source("your_twitter.R") #this file will set my personal variables for my twitter app, adjust the name of this file. use the provide template your_twitter.R
-
-setup_twitter_oauth(consumer_key,consumer_scret, access_token,access_scret) #connect to  twitter app
-#setup_twitter_oauth("m0c8uiiQq4RtDjAAZTStL92S","qDsqOGPTyISMCS4hqiP8nQ0cGFXZe7a9ek5QpICDjp7XzxIIai", "746835948688805889-pyCZUMD8Cp7OqgjlSNhiLlB3dxzmcMu","h75BZz6Xih9Uwgh4YQgDEPrkoKBnyCQ82iOCZUrlt61xJ") #connect to  twitter app
+# # for creating a twitter app (apps.twitter.com) see youtube https://youtu.be/lT4Kosc_ers
+# consumer_key <-'k9vUb4jWT1EoYRoCEsE3s8vnc'
+# consumer_scret <- 'Q6U0Ek1umFvWWGuOVsBOekG7xM5R1cXYkIMx4q85XtWbWqHPo4'
+# access_token <- '746835948688805889-q9LEUy2zqL8rigTon9FpqNpH6TkSNvk'
+# access_scret <- 'yc3IFL7cQsEMNCLhXuyUvaOv5Wiick0S7scXRU5G0ZICg'
+# 
+# #consumer_key <-'S3HE6pNUsmDP3LxMSDgRw8kx8'
+# #consumer_scret <- '1aLg11NynVF4q93uaxHuCkd9GpIZxtaePxlvVZoKHrmPjrQIoC '
+# #access_token <- '1079739876080340992-O9MHCV8yIbP4fpCXnktPDKTerIk4i8'
+# #access_scret <- 'ZYi6mkuPA2zQDw3jqtK9xKvRWc6Yj7xHmCCwMNLpyI0kY'
+# 
+# source("your_twitter.R") #this file will set my personal variables for my twitter app, adjust the name of this file. use the provide template your_twitter.R
+# 
+# setup_twitter_oauth(consumer_key,consumer_scret, access_token,access_scret) #connect to  twitter app
+# #setup_twitter_oauth("m0c8uiiQq4RtDjAAZTStL92S","qDsqOGPTyISMCS4hqiP8nQ0cGFXZe7a9ek5QpICDjp7XzxIIai", "746835948688805889-pyCZUMD8Cp7OqgjlSNhiLlB3dxzmcMu","h75BZz6Xih9Uwgh4YQgDEPrkoKBnyCQ82iOCZUrlt61xJ") #connect to  twitter app
 
 ##### This example uses the following 3 celebrities: Donald Trump, Hillary Clinton, and Bernie Sanders
 ##  You should replace this with your own celebrities, at least 3, but more preferred 
 ##  Note that it will take the computer some to collect the tweets
 
-tweets_Beyonce <- searchTwitter("#Beyonce", n=1000, lang="en", resultType="recent") #1000 recent tweets about Beyonce, in English
-tweets_Madonna <- searchTwitter("#Madonna", n=1000, lang="en", resultType="recent") #1000 recent tweets about Madonna
-tweets_West <- searchTwitter("#West", n=1000, lang="en", resultType="recent") #1000 recent tweets about Kanye West
+# tweets_Beyonce <- searchTwitter("#Beyonce", n=1000, lang="en", resultType="recent") #1000 recent tweets about Beyonce, in English
+# tweets_Madonna <- searchTwitter("#Madonna", n=1000, lang="en", resultType="recent") #1000 recent tweets about Madonna
+# tweets_MickaelJackson <- searchTwitter("#MichaelJackson", n=1000, lang="en", resultType="recent") #1000 recent tweets about  MickaelJackson
 
-# Save an object to a file
-saveRDS(tweets_Beyonce, file = "tweets_Beyonce.rds")
-saveRDS(tweets_Madonna, file = "tweets_Madonna.rds")
-saveRDS(tweets_West, file = "tweets_West.rds")
+# Save an object to a file®
+# saveRDS(tweets_Beyonce, file = "tweets_Beyonce.rds")
+# saveRDS(tweets_Madonna, file = "tweets_Madonna.rds")
+# saveRDS(tweets_MickaelJackson, file = "tweets_MickaelJackson.rds")
 ##Restore the object
 
-# tweets_Beyonce =readRDS( file = "tweets_Beyonce.rds")
-# tweets_Madonna =readRDS( file = "tweets_Madonna.rds")
-# tweets_West =readRDS( file = "tweets_West.rds")
+ tweets_Beyonce =readRDS( file = "tweets_Beyonce.rds")
+ tweets_Madonna =readRDS( file = "tweets_Madonna.rds")
+ tweets_MickaelJackson =readRDS( file = "tweets_MickaelJackson.rds")
 
 ######################## Sentiment analysis
 
 tweets_Beyonce.text <- laply(tweets_Beyonce, function(t)t$getText()) #get text out of tweets 
 tweets_Madonna.text <- laply(tweets_Madonna, function(t)t$getText()) #get text out of tweets
-tweets_West.text <- laply(tweets_West, function(t)t$getText()) #get text out of tweets
+tweets_MickaelJackson.text <- laply(tweets_MickaelJackson, function(t)t$getText()) #get text out of tweets
 
 
 #taken from https://github.com/mjhea0/twitter-sentiment-analysis
@@ -209,19 +209,19 @@ source("sentiment3.R") #load algoritm
 
 analysis_Beyonce <- score.sentiment(tweets_Beyonce.text, pos, neg)
 analysis_Madonna <- score.sentiment(tweets_Madonna.text, pos, neg)
-analysis_West <- score.sentiment(tweets_West.text, pos, neg)
+analysis_MickaelJackson <- score.sentiment(tweets_MickaelJackson.text, pos, neg)
 
 
-sem<-data.frame(analysis_Beyonce$score, analysis_Madonna$score, analysis_West$score)
+sem<-data.frame(analysis_Beyonce$score, analysis_Madonna$score, analysis_MickaelJackson$score)
 
 
-semFrame <-melt(sem, measured=c(analysis_Beyonce.score,analysis_Madonna.score, analysis_West.score ))
+semFrame <-melt(sem, measured=c(analysis_Beyonce.score,analysis_Madonna.score, analysis_MickaelJackson.score ))
 names(semFrame) <- c("Person", "score")
-semFrame$Person <-factor(semFrame$Person, labels=c("Beyonce", "Madonna", "West")) # change the labels for your celibrities
+semFrame$Person <-factor(semFrame$Person, labels=c("Beyonce", "Madonna", "MichaelJackson")) # change the labels for your celibrities
 
 subsetBeyonce <-semFrame[which(semFrame$Person == 'Beyonce'),]
 subsetMadonna <-semFrame[which(semFrame$Person == 'Madonna'),]
-subsetWest <-semFrame[which(semFrame$Person == 'West'),]
+subsetMickaelJackson <-semFrame[which(semFrame$Person == 'MicaelJackson'),]
 
 
 #The data you need for the analyses can be found in semFrame
@@ -247,28 +247,28 @@ Lets start by looking at how the boxplot looks for each person and the relevant 
 boxplot(score ~ Person, data=semFrame, main="Boxplot of sentiment for each person",
         xlab="Person", ylab="Sentiment")
 
-leveneTest( semFrame$score,semFrame$Person, center = median)
+levene = leveneTest( semFrame$score,semFrame$Person, center = median)
 ```
-The Levene test results in a very low p-value., therefore the hypothesis of equal variances is rejected and it is concluded that there is a difference between the variances in the pipulation. Therefore the variance is not considered to be homogeneous.
+The Levene test results in a very low p-value $`r levene[1, "Pr(>F)"]`$. Therefore the hypothesis of equal variances is rejected and it is concluded that there is a difference between the variances in the population. Therefore the variance is not considered to be homogeneous.
 
 ### Visual inspection
-Graphically examine the variation in tweets' sentiments for each celebrity (e.g. histogram, density plot) 
+Looking at the figures here below we see that the sentimnt scores for all the celebrities follow a very similar distribution that  looks a lot like a normal diatribution.
 
 ```{r,fig.width = 5, fig.height =4}
 #include your code and output in the document
 
 hist(subsetBeyonce$score)
 hist(subsetMadonna$score)
-hist(subsetWest$score)
+hist(subsetMickaelJackson$score)
 meanBeyonce<-mean(subsetBeyonce$score)
 meanMadonna<-mean(subsetMadonna$score)
-meanWest<-mean(subsetWest$score)
+meanMickaelJackson<-mean(subsetMickaelJackson$score)
 ```
 
 
 ### Mean sentiments
 
-Here below we plot the means of each class using plotmeans from the package gplots.  We can see that the mean for Beyonce is `r meanBeyonce`, for Madonna is `r meanMadonna` and for Kanye West it is `r meanWest`. Where a lower value means that the sentiment analysis is more negative.
+Here below we plot the means of each class using plotmeans from the package gplots.  We can see that the mean for Beyonce is `r meanBeyonce`, for Madonna is `r meanMadonna` and for MickaelJackson it is `r meanMickaelJackson`. Where a lower value means that the sentiment analysis is more negative.
 ```{r}
 plotmeans(score ~ Person, data = semFrame,mean.labels = TRUE,connect = FALSE,ylim = c(-0.1,0.8))
 ```
@@ -281,12 +281,12 @@ plotmeans(score ~ Person, data = semFrame,mean.labels = TRUE,connect = FALSE,yli
  AnovaResults <-anova(model0,model1)
 ```
 
-The calculated f-value, F(2,2997) is `r AnovaResults$F[2]` and the p- value is $`r AnovaResults[2, "Pr(>F)"]`$. since the p- value is so small we can assume that the sentiment of tweets is significantly different depending on what celebrity is mentioned in the tweet.
+The calculated f-value, F(2,2997) is `r AnovaResults$F[2]` and the p- value is $`r AnovaResults[2, "Pr(>F)"]`$. since the p- value is so small we can assume that the   sentiment of tweets is significantly different depending on what celebrity is mentioned in the tweet.
  
 
 
 ### Post Hoc analysis
-If a model that includes the celebrity is better in explaining the sentiments of tweets than a model without such predictor, conduct a post-hoc analysis with e.g. Bonferroni correction, to examine which of celebrity tweets differ from the other celebrity tweets
+Now a post-hoc analysis is performed to examine which of the tweets differ from othere celebrity tweets
 
 ```{r}
 #include your code and output in the document
@@ -294,18 +294,17 @@ BonferroniResults <- pairwise.t.test(semFrame$score, semFrame$Person, paired = F
 BonferroniP <- BonferroniResults$p.value
 BonferroniP
 ```
-We chose to use the Bonferroni correction to  conduct this post-hoc analysis. There the p-values are multiplied bu the number of comparisons.
+We chose to use the Bonferroni correction to conduct this post-hoc analysis. There the p-values are multiplied bu the number of comparisons.
 
-
-According to results here above: Madonna vs West has significance that is adjusted to bonferroni of $`r BonferroniP[4]`$,Madonna vs Beyonce has significance that is adjusted to bonferroni of $`r BonferroniP[1]`$ and Beyonce vs West has significance that is adjusted to bonferroni of $`r BonferroniP[2]`$. We can see that the bonferroni adjustment leads to all te p-values to be higher than the p-value obtained in the Anova test above. Since the value for Beyonce and Madonna is rather close to 1 it tells us that there really is not much difference on the sentiment for the two. But th other two pairs still have a significant difference, that it the sentiment is significantly different between the two persons in the pair.
+According to results here above all of the celebrity pair comparisons have a low p-value that indicates again that the sentiment is dependent on what celebrity it is in relation to.
 
 
 ### Report section for a scientific publication
-According to the analysis we have seen that the sentiment of Tweets is not always significantly correlated to the celebrity.
+According to the analysis we have seen that the sentiment of Tweets is correlated to the celebrity.
 
-First we visualized  the results a bit by looking at the plot of the means of the tweet sentiment per person. We saw that the means for Madonna and Beyonce are closest to each other.
+First we visualized the results a bit by looking at the plot of the means of the tweet sentiment per person. We saw that the means for Madonna and Beyonce are closest to each other.
 
-A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained the p value of $`r AnovaResults[2, "Pr(>F)"]`$ which hinted there was significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we saw that the difference of sentiment is not significant for Beyonce and Madonna(p-value of $`r BonferroniP[1]`$ ), but is significant for Kanye West vs Madonna and Beyonce (p-values: $`r BonferroniP[2]`$,$`r BonferroniP[4]`$).
+A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained the p value of $`r AnovaResults[2, "Pr(>F)"]`$ which hinted there was significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we saw that the difference of sentiment is not significant for Beyonce and Madonna(p-value of $`r BonferroniP[1]`$ ), but is significant for  MickaelJackson vs Madonna and Beyonce (p-values: $`r BonferroniP[2]`$,$`r BonferroniP[4]`$).
 
 
 
