@@ -10,7 +10,7 @@
 
 % We get the matrix.
 % -----
-maxImg = 200
+maxImg = 2000
 initMatrix = []
 imagefiles = dir('img_align_celeba/*.jpg');      
 nfiles = length(imagefiles);    % Number of files found
@@ -26,40 +26,73 @@ initMatrix = initMatrix';
 % -------
 %%
 
-% Get the snapshots
-% We select them randomly for now
-nbSnapshots = 200;
-indicesSnapshots = randperm(maxImg,nbSnapshots);
-snapshotMatrix = initMatrix(:,indicesSnapshots);
+snapToTest = [10 50 100 200 300 400 500 750 1000 1500];
+distancesFromOriginal = [];
+timeSnap = [];
 
-% Get the center
-center = mean(initMatrix,2);
-centeredPoints = initMatrix - center;
+for sn = 1:size(snapToTest,2)
+    
+    % start the time
+    tic;
+    
+    % Get the snapshots
+    % We select them randomly for now
+    nbSnapshots = snapToTest(sn)
+    indicesSnapshots = randperm(maxImg,nbSnapshots);
+    snapshotMatrix = initMatrix(:,indicesSnapshots);
 
-% Get the centerd points
-y = snapshotMatrix - center;
+    %snapshotMatrix = zeros(size(initMatrix,1), nbSnapshots);
 
-% get the Gram Matrix
-gram = y' * y;
 
-% get the eigenvalues and eigenvectors
-[V,D] = eig(gram);
-% We change order the vectors in increasing order
-D = rot90(fliplr(D),-1);
-V = flip(V,2);
+    % Get the center
+    center = mean(initMatrix,2);
+    centeredPoints = initMatrix - center;
 
-% We get the basis vectors
-U = zeros(size(initMatrix,1), size(D,1));
-for i = 1:size(D,1)
-   U(:,i) = (1/(sqrt(D(i,i)))) * (y * V(:,i));
+    % Get the centerd points
+    y = snapshotMatrix - center;
+
+    % get the Gram Matrix
+    gram = y' * y;
+
+    % get the eigenvalues and eigenvectors
+    [V,D] = eig(gram);
+    % We change order the vectors in increasing order
+    D = rot90(fliplr(D),-1);
+    V = flip(V,2);
+
+    % We get the basis vectors
+    U = zeros(size(initMatrix,1), size(D,1));
+    for i = 1:size(D,1)
+       U(:,i) = (1/(sqrt(D(i,i)))) * (y * V(:,i));
+    end
+
+    elapsed = toc;
+    timeSnap = [timeSnap elapsed];
+    
+    % take the mean distance
+    matrixCenter = zeros(size(initMatrix,1), size(initMatrix,2));
+    for i = 1:size(initMatrix,2)
+        matrixCenter(:,i) = center; 
+    end
+    
+    reconstructedMatrix = (centeredPoints' * U * U')' + matrixCenter;
+    
+    distVec = [];
+    for i = 1:size(initMatrix,2)
+       distVec = [distVec pdist([initMatrix(:,i)' ; reconstructedMatrix(:,i)'])];
+    end
+    
+    distancesFromOriginal = [distancesFromOriginal mean(distVec)];
+    
 end
-U;
+timeSnap
+distancesFromOriginal
 
 %%
 % Testing
 % We project on the new space
 matrixCenter = zeros(size(initMatrix,1), size(initMatrix,2));
-for i = 1:size(U,2)
+for i = 1:size(initMatrix,2)
    matrixCenter(:,i) = center; 
 end
 
@@ -67,5 +100,15 @@ end
 reconstructedMatrix = (centeredPoints' * U * U')' + matrixCenter;
 
 % We show the mean image
-image = uint8(reshape(reconstructedMatrix(:,973),h,w,d)*255);
+image = uint8(reshape(reconstructedMatrix(:,100),h,w,d)*255);
 figure, imshow(image)
+
+%% plot
+plot(snapToTest,timeSnap)
+%title("effect of number of snapshots on the time")
+xlabel("nb of snapshots")
+ylabel("time in seconds")
+
+figure, plot(snapToTest,distancesFromOriginal)
+xlabel("nb of snapshots")
+ylabel("mean euclidian distance from the original point")
