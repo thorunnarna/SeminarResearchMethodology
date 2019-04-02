@@ -40,13 +40,13 @@ The research question that will be examined in the experiment (or alternatively 
 Does coffee consumption increases IQ test score #Should we add the caffeine level ?
 
 ##The related conceptual model 
-This model should include:
-*Independent variable(s) -> Coffee consumption
-*Dependent variable -> score at IQ test.
-*Mediating variable (at least 1) -> sleepingness feeling
-*Moderating variable (at least 1) 
--> amount of caffeine, prior coffee consumption habit/caffeine tolerance
 
+Independent variable(s) -> caffeine consumption
+Dependent variable -> score at IQ test.
+Mediating variable (at least 1) -> sleepingness feeling
+Moderating variable (at least 1) -> prior coffee consumption habit/caffeine tolerance
+
+![Conceptual model](figures/Coffeemodel.png)
 
 ##Experimental Design 
 Note that the study should have a true experimental design
@@ -221,7 +221,7 @@ semFrame$Person <-factor(semFrame$Person, labels=c("Beyonce", "Madonna", "Michae
 
 subsetBeyonce <-semFrame[which(semFrame$Person == 'Beyonce'),]
 subsetMadonna <-semFrame[which(semFrame$Person == 'Madonna'),]
-subsetMickaelJackson <-semFrame[which(semFrame$Person == 'MicaelJackson'),]
+subsetMickaelJackson <-semFrame[which(semFrame$Person == 'MichaelJackson'),]
 
 
 #The data you need for the analyses can be found in semFrame
@@ -237,9 +237,9 @@ We can see that the sentiment of tweets related to different celebrity is direct
 Therefor the conceptual model is very simple consisting of two variables, "Celebrity" and "Sentiment".
 
 ### Homogeneity of variance analysis
-Analyze the homogeneity of variance of sentiments of the tweets of the different celebrities
+Here we will analyze the homogeneity of variance of sentiments of the tweets of the different celebrities
 
-Lets start by looking at how the boxplot looks for each person and the relevant sentiment that has been analysed.
+Lets start by looking at how the boxplot looks for each person and the relevant sentiment score. We can already see from looking at the boxplot that the variance does not seem to be the same for all  celibirities. Madonna seems to have the broadest spectrum and the median line hits a bit different places depenfing on the celebrities.
 
 ```{r}
 #this was not here in the intermediate report.
@@ -252,7 +252,8 @@ levene = leveneTest( semFrame$score,semFrame$Person, center = median)
 The Levene test results in a very low p-value $`r levene[1, "Pr(>F)"]`$. Therefore the hypothesis of equal variances is rejected and it is concluded that there is a difference between the variances in the population. Therefore the variance is not considered to be homogeneous.
 
 ### Visual inspection
-Looking at the figures here below we see that the sentimnt scores for all the celebrities follow a very similar distribution that  looks a lot like a normal diatribution.
+Looking at the figures here below we see that the sentiment scores for all the celebrities follow a very similar distribution that looks a lot like a normal distribution.
+But by inspecting the histograms we can see that the distribution is not entirely the same. Therefore we will do a furter inspection to see how the distributions differ from each other. 
 
 ```{r,fig.width = 5, fig.height =4}
 #include your code and output in the document
@@ -263,12 +264,16 @@ hist(subsetMickaelJackson$score)
 meanBeyonce<-mean(subsetBeyonce$score)
 meanMadonna<-mean(subsetMadonna$score)
 meanMickaelJackson<-mean(subsetMickaelJackson$score)
+stdBeyonce<-sd(subsetBeyonce$score)
+stdMadonna<-sd(subsetMadonna$score)
+stdMickaelJackson<-sd(subsetMickaelJackson$score)
+
 ```
 
 
 ### Mean sentiments
 
-Here below we plot the means of each class using plotmeans from the package gplots.  We can see that the mean for Beyonce is `r meanBeyonce`, for Madonna is `r meanMadonna` and for MickaelJackson it is `r meanMickaelJackson`. Where a lower value means that the sentiment analysis is more negative.
+Here below we plot the means of each class using plotmeans from the package gplots.  We can see that the mean for Beyonce is `r meanBeyonce`, for Madonna is `r meanMadonna` and for Mickael Jackson it is `r meanMickaelJackson`. Where a lower value means that the sentiment analysis is more negative. Just by looking at the means we see that they are considerably far from each other. As well we have te standard deviations 0.958, 0.897, 0.944 in the same respective order as before. 
 ```{r}
 plotmeans(score ~ Person, data = semFrame,mean.labels = TRUE,connect = FALSE,ylim = c(-0.1,0.8))
 ```
@@ -280,8 +285,8 @@ plotmeans(score ~ Person, data = semFrame,mean.labels = TRUE,connect = FALSE,yli
  model1<- lm(score ~ Person, data = semFrame) #model with predictor
  AnovaResults <-anova(model0,model1)
 ```
-
-The calculated f-value, F(2,2997) is `r AnovaResults$F[2]` and the p- value is $`r AnovaResults[2, "Pr(>F)"]`$. since the p- value is so small we can assume that the   sentiment of tweets is significantly different depending on what celebrity is mentioned in the tweet.
+Here we have tied two different linear models to fit put outcome. Model0 is a simple model where the sentiment score stands alone, but model1 has the celebrity in there as well. 
+The calculated f-value, F(2,2997) is 31.640 and the p- value is very small and well below .0001. Since the p-value is so small it indicates that the sentiment of tweets is significantly different depending on what celebrity is mentioned in the tweet.
  
 
 
@@ -300,11 +305,9 @@ According to results here above all of the celebrity pair comparisons have a low
 
 
 ### Report section for a scientific publication
-According to the analysis we have seen that the sentiment of Tweets is correlated to the celebrity.
+We analysed sentiment scores of tweets for thee dfferent celebrities. We had scores for Madonna (M=0.459, SD=0.897), Beyonce (M=0.132, SD=0.958) and Micheal Jackson (M=0.245, SD=0.944). The means and standard deviations are different between celebrities so they where inspected further.  
 
-First we visualized the results a bit by looking at the plot of the means of the tweet sentiment per person. We saw that the means for Madonna and Beyonce are closest to each other.
-
-A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained the p value of $`r AnovaResults[2, "Pr(>F)"]`$ which hinted there was significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we saw that the difference of sentiment is not significant for Beyonce and Madonna(p-value of $`r BonferroniP[1]`$ ), but is significant for  MickaelJackson vs Madonna and Beyonce (p-values: $`r BonferroniP[2]`$,$`r BonferroniP[4]`$).
+A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained  the results (F(2,2997) = 31.65, p <.0001) which states a significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we again got p -values(<<.001 ,0.02 ,<<.001 ) that show us that the difference of scores is signifant depeding on celebrity.
 
 
 
