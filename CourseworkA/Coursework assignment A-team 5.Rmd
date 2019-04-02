@@ -1,7 +1,7 @@
 ---
 title: "Report Template coursework assignment A - 2018"
 subtitle: "CS4125 Seminar Research Methodology for Data Science"
-author: "Þórunn Arna Ómardóttir (4917499), Nathan Buskulic (4947916), Mitchell Deen(4396340)"
+author: "??runn Arna ?mard?ttir (4917499), Nathan Buskulic (4947916), Mitchell Deen(4396340)"
 date: "4/3/2019"
 
 output:
@@ -123,8 +123,12 @@ library(car)#for leveneTest
 library(ez) 
 #install.packages("gplots")
 library(gplots) # to plot the means for the celebrities
-
-library(pander)
+#install.packages("ggplot2")
+library(ggplot2) # to plot the means for the simple effect analysis
+#install.packages("nlme")
+library(nlme) # For multilevel analysis
+#install.packages("pander")
+library(pander) # For fancy result reporting
 
 
 ################### functions
@@ -182,7 +186,7 @@ clearTweets <- function(tweets, excl) {
 # tweets_Madonna <- searchTwitter("#Madonna", n=1000, lang="en", resultType="recent") #1000 recent tweets about Madonna
 # tweets_MickaelJackson <- searchTwitter("#MichaelJackson", n=1000, lang="en", resultType="recent") #1000 recent tweets about  MickaelJackson
 
-# Save an object to a file®
+# Save an object to a file?
 # saveRDS(tweets_Beyonce, file = "tweets_Beyonce.rds")
 # saveRDS(tweets_Madonna, file = "tweets_Madonna.rds")
 # saveRDS(tweets_MickaelJackson, file = "tweets_MickaelJackson.rds")
@@ -319,8 +323,8 @@ The model can be found in the figure below.
 ![Model for the webvisit question](figures/Model_Question_2.jpeg){width=50%}
 
 ### Visual inspection
-Graphically examine the variation in page visits for different factors levels (e.g. histogram, density plot etc.)
 
+We will first examine the data and look at the distributions.
 
 ```{r}
 myData <- read.csv("webvisita.csv",header=TRUE)
@@ -333,9 +337,9 @@ hist(myData$pages, xlab="Number of pages visited", main = "Histogram of the numb
 plot(density(myData$pages), xlab="Number of pages visited", main = "density of the number of pages visited")
 ```
 
+It appears that the data do not look like normally distributed, We will provide more analysis to understand these distributions.
 
 ### Normality check
-Statistically test if variable page visits deviates from normal distribution
 
 We can see that the data does not seems to come from a normal distribution, thus we will do a normality test.
 
@@ -344,50 +348,67 @@ shapiro.test(myData$pages)
 ```
 
 The really small p-value indcates here that there is a high probability that this data do not come from a normal distribution.
+From what we can visually see it seems that the data comes from a Poisson distribution, which is an important information for the Model analysis.
 
 ### Model analysis
-Conduct a model analysis, to examine the added values of adding 2 factors and interaction between the factors in the model to predict page visits.
 
+Since the data are not normally distributed, we cannot use a simple linear model which assume the normality of the data. Thus we will fit generalized linear model with a poisson distribution assumption.
 
 ```{r}
-library(pander)
 # We create all the different models
-model0 <- lm(pages ~ 1, data=myData)
-model1 <- lm(pages ~ version, data=myData)
-model2 <- lm(pages ~ portal, data=myData)
-model3 <- lm(pages ~ version + portal, data=myData)
-model4 <- lm(pages ~ version + portal + version:portal, data = myData)
+model0 <- glm(pages ~ 1, data=myData, family="poisson")
+model1 <- glm(pages ~ version, data=myData, family="poisson")
+model2 <- glm(pages ~ portal, data=myData, family="poisson")
+model3 <- glm(pages ~ version + portal, data=myData, family="poisson")
+model4 <- glm(pages ~ version + portal + version:portal, data = myData, family="poisson")
 
-
-pander(anova(model0,model1,test="F"),caption = "Version as main effect on the number of pages visited")
-pander(anova(model0,model2,test="F"),caption = "Portal as main effect on the number of pages visited")
-pander(anova(model3,model4,test="F"),caption = "Interaction effect on top of the two main effect")
-pander(anova(model4),caption = "Effect of version, portal and interaction effect on the number of pages visited")
 ```
 
-We see a significant two-way interaction effect, we will thus perform a simple effect analysis to better understand this interaction effect.
+Since we are using generalized models, we cannot use an F-test and we decided to use a Chi-Square test instead in our analysis.
+
+```{r}
+pander(anova(model0,model1,test="Chisq"),caption = "Version as main effect on the number of pages visited")
+pander(anova(model0,model2,test="Chisq"),caption = "Portal as main effect on the number of pages visited")
+pander(anova(model3,model4,test="Chisq"),caption = "Interaction effect on top of the two main effect")
+pander(anova(model4, test="Chisq"),caption = "Effect of version, portal and interaction effect on the number of pages visited")
+```
+
+We can observe a significant main effect of the version (p < 0.01) and the portal (p < 0.01). We also see a significant two-way interaction effect (p < 0.01), we will thus perform a simple effect analysis to better understand this interaction effect.
 
 ###Simple effect analysis
-If the analysis shows a significant two-way interaction effect, conduct a Simple Effect analysis to explore this interaction effect in more detail.It helps first to look at the means in a figure
+
+Since we found a significant two-way interaction effect we will conduct a simple effect analysis to explore this interaction effect. We will first plot the effect of the means according to the version and the portal in two different figures to know which effect we should explore in more details.
+
+```{r}
+bar <- ggplot(myData, aes(portal, pages, fill = version))
+bar + stat_summary(fun.y = mean, geom = "bar", position="dodge")
+```
+
+```{r}
+bar <- ggplot(myData, aes(version, pages, fill = portal))
+bar + stat_summary(fun.y = mean, geom = "bar", position="dodge")
+```
+
+From the two figures, we decided that the most interesting effect to explore was the one that compare the two versions and try to see if the change of version change the fact that there is a significant difference in the number of pages visited according to the portal.
 
 
 ```{r}
 myData$simple <- interaction(myData$version, myData$portal) #merge two factors
 
-contrastConsummer <-c(1,-1,0,0) #Only the consummer portal data
-contrastCompany <-c(0,0,1,-1) #Only the company portal data
+contrastOldVersion <-c(1,0,-1,0) #Only the old version data
+contrastNewVersion <-c(0,1,0,-1) #Only the new version data
 
-SimpleEff <- cbind(contrastConsummer,contrastCompany)
+SimpleEff <- cbind(contrastOldVersion,contrastNewVersion)
 contrasts(myData$simple) <- SimpleEff #now we link the two contrasts with the factor simple
-pander(simpleEffectModel <-lm(pages ~ simple , data = myData, na.action = na.exclude), caption = "Simple effect analysis")
-
+pander(simpleEffectModel <-glm(pages ~ simple , data = myData, na.action = na.exclude, family = "poisson"), caption = "Simple effect analysis")
 ```
 
+The results of the simple effect analysis shows that while there were a significant difference (P < 0.001) between the two portals in the old version, we cannot find that significant difference anymore in the new version.
 
 ### Report section for a scientific publication
-Write a small section for a scientific publication, in which you report the results of the analyses, and explain the conclusions that can be drawn.
 
-A linear model was fitted on the number of pages visited of a website, taking the version of the website (an old version and a new one) and the portal that was used to access the website (a portal for consumers and one for companies) as independent variables, and including a two-way interaction between these variables. The analysis found a significant main effect for the version (F(1,995) = 7.6357, p. < 0.006)and for the portal (F(1,995) = 60.8571, p. < 10^-13). It also found a significant two-way interaction effect ( F(1, 995) = 33.1827, p. < 10^-7) between these two variables. ((((However, since a lot of data was used, one can put in doubt the significance result of the version, especially compared to the F values of the portal and the interaction between the variables.)))) The two-way interaction was further examined by a Simple Effect analysis. It found a significant difference for the version in the portal for consumer (t = -2.349, p. = 0.019) as well as in the portal for companies (t = 5.799, p. < 9e-09).
+A generalized linear model was fitted on the number of pages visited of a website, taking the version of the website (an old version and a new one) and the portal that was used to access the website (a portal for consumers and one for companies) as independent variables, and including a two-way interaction between these variables. The analysis found a significant main effect for the version ($\chi^2$ (1,997) = 7.36, p. < 0.01)and for the portal ($\chi^2$ (1,997) = 60.39, p. < 0.001). It also found a significant two-way interaction effect ( $\chi^2$ (1,995) = 28.98, p. < 0.001) between these two variables. The two-way interaction was further examined by a Simple Effect analysis on the effect of the version on the differences in portals. It found a significant difference for the portal given the old version (z = -9.1, p. < 0.001) but no difference could be found when using the new version (z = -1.2, p. = 0.23).
+
 
 
 ##Question 3 - Linear regression analysis
@@ -553,8 +574,7 @@ Write a small section for a scientific publication, in which you report the resu
 # Part 3 - Multilevel model
 
 ## Visual inspection
-Use graphics to inspect the distribution of the score, and relationship between session and score
-
+First, we inspect the distribution of the scores.
 
 ```{r}
 set1 <- read.csv("set1.csv", header = TRUE)
@@ -564,45 +584,48 @@ set1$Subject <- factor(set1$Subject)
 
 hist(set1$score, xlab="score", main="Histogram of the scores")
 plot(density(set1$score), xlab="score", main="density of the scores")
+```
 
+If we just look at the score distribution, they seems to be normally distributed and centered around 150. We will now look at how the session affect the scores with an assumption of iid of the variables (which is false).
+
+```{r}
 #Plot of the relationship between session and score
 # Assuming iid of the variables which is not true, shouldn't do that.
 boxplot(score ~ session, data=set1, xlab="Session", ylab="Score", main="relationship between score and session if we assume iid")
 ```
 
+It seems that even without looking at each person individually the session seems to have an impact on the scores. We will further analyse this effect by taking into account the evolution of each person now.
+
 ## Multilevel analysis
 Conduct multilevel analysis and calculate 95% confidence intervals, determine:
 
-* If session has an impact on people score
+We will conduct a multilevel analysis of the dataset where each subject get a random intercept. We first want to know if the session has an impact on people scores.
+
 
 ```{r}
-library(nlme)
-library(pander)
-
 randomIntercept <- lme(score ~ 1, data = set1, random = ~1|Subject, method="ML")
 addSession <- update(randomIntercept, .~. + session)
 pander(anova(randomIntercept,addSession), caption="comparisons of models when session is added as a fixed factor")
 ```
-The addition of the session significantly improves the model, we will now verify the 95% confidence bound.
+The addition of the session significantly improves the model (p. < 0.001), we will now verify the 95% confidence bound.
 
 ```{r}
 intervals(addSession)
 ```
-We see that for the fixed effect, the session deviates from 0 in the 95% interval.
+We see that for the fixed effect, the session deviates from 0 in the 95% interval which means that there is a significant impact of the session on people's scores.
 
 
-* If there is significant variance between the participants in their score
-
+We will now look if there is a significant variance between the participants in their score.
 
 ```{r}
 intervals(randomIntercept)
 ```
 
-We can see that in the Random effect, the standard deviation of the intercept do not include 0 in the 95% interval, thus there is a significant variance between the participants in their score
+We can see that in the Random effect, the standard deviation of the intercept does not include 0 in the 95% interval, thus there is a significant variance between the participants in their score.
 
 ## Report section for a scientific publication
-Write a small section for a scientific publication, in which you report the results of the analyses, and explain the conclusions that can be drawn.
 
-From our analysis it appears that there is a significant main effect of the session over participants score (L.ratio =  167.7, p. < 10^-37) when compared to the baseline at a 95% confidence interval (sd(session) = [0.32,0.42]). We can also show that there is a significant variance between participants in their score (sd(intercept) =  [43.7,49.6]) at a 95% confidence interval.
-From these results, we can draw the conclusion that the session in which the participant is has an impact on his score which can be interpreted as improvement over each exercise session. We can also conclude that each participant is different and that indeed, we cannot consider the observations to be independent.
+
+We fitted a linear Mixed-Effects model with a random intercept for each subject and we then build a new model that used the session as independant variables to predict the scores. It appears that there is a significant main effect of the session over participants score ($\chi^2$(1) = 167.7, p. < 0.001) when compared to the baseline at a 95% confidence interval (estimate(session) = [0.31;0.42]). We can also show that there is a significant variance between participants in their score (sd(intercept) = [43.69;49.55]) at a 95% confidence interval.
+From these results we can draw the conclusion that the session in which the participants is has an impact on his score which can be interpreted as improvement over each exercice session since the estimates are positive. We can also conclude that each participant is different and that indeed, we cannot consider the observations to be independent.
 
