@@ -1,5 +1,37 @@
+setwd("~/Cours/M1/Seminar_Research_Methodology/project2/")
+
 d <- read.csv("data.csv")
+d$Type <- factor(d$Type)
 str(d)
+
+## Nathan's stuff
+bd = subset(d,model == 'B1' | model == 'B2' | model == 'B3')
+
+
+mmd = subset(d,model == 'MN' | model == 'M1' | model == 'M2' | model == 'M3' | model == 'MF')
+
+bmd = subset(d,Type == "B" | Type == "M")
+
+t.test(bd$score,mmd$score)
+mean(bd$score)
+mean(mmd$score)
+
+plot(density(bd$score))
+
+modelBig <- lm(score ~ TeD + TrD1 + TrD2 + TrD3 + TrD4 + TrD5 + TrD6 + TrD7 + TrD8 + model,data=d)
+modelTeD <- lm(score ~ TeD, data=d)
+
+modelTeDbm <- lm(score ~ TeD, data=bmd)
+modelTeDTypebm <- lm(score ~ TeD + Type, data=bmd)
+
+anova(modelBig)
+summary(modelBig)
+
+anova(modelTeD)
+summary(modelTeD)
+
+anova(modelTeDbm,modelTeDTypebm)
+summary(modelTeDType)
 
 ## RQ1
 d$Type<-substr(d$model,1,1) #add one extra column to aggregate all B, and all M.
