@@ -417,7 +417,7 @@ For this assignment we retrieved a data set from http://www.stat.ufl.edu/~winner
 
 
 ### Visual inspection
-The distribution of the independent variable is displayed
+The distribution of the independent variable is displayed here.
 
 ```{r, message=FALSE, warning=FALSE}
 # Reading in the necessary packages
@@ -453,10 +453,10 @@ plot(log(price) ~ accel,main="log(price) vs accel")
 plot(log(price) ~ mpg,main="log(price) vs mpg")
 plot(log(price) ~ year,main="log(price) vs year")
 ```
-
+We can make a few observations based on these scatter plots. Considering the acceleration variable, a linear pattern can be distinguished. In general, higher accel values also correspond to higher prices. The inverse seems to hold for the mpg variable; low mpg values often have high values attached to them. The third scatter plot does not give the indication of a relationship between year and price. We will now dive deeper into these variables to find out whether our visual inspection matches with the results of linear regression. 
 
 ### Linear regression
-From the anova table we can see that the accel and mpg variables are able to significantly improve the model. The year variable is not able to explain any additional significant variance in the price variable. Therefore we exclude the price variable from further analysis.
+From the anova table we can see that the accel and mpg variables are able to significantly improve the model. The year variable is not able to explain any additional significant variance in the price variable. Therefore we exclude the year variable from further analysis. The R^2 value of 0.52 indicates that we can explain about half of the variance in the price using the two remaining independent variables.
 
 
 ```{r, message=FALSE, warning=FALSE}
@@ -466,8 +466,11 @@ model1 <- lm(log(price) ~ accel)
 model2 <- lm(log(price) ~ accel + mpg)
 model3 <- lm(log(price) ~ accel + mpg + year)
 
-pander(anova(model0,model1,model2,model3),
+pander(anova(model0,model1,model2,model3), 
        caption = "Model comparison to predict the price of a car")
+
+pander(summary(model2),
+       caption = "Summary of model 2")
 ```
 
 ```{r, message=FALSE, warning=FALSE}
@@ -477,32 +480,32 @@ pander(confint(model2),
 pander(lm.beta(model2),
        caption = "standardised regression coefficients") # standardised regression coefficients
 ```
+Finally we check the confidence intervals of our estimates to have a better idea of our model's certainty. The standardized regression coefficients serve as a means to compare the magnitude of the effects of the individual coefficients, as their values represent the increase in price associated with an increase in one standard deviation of the predictor. We can see that the effect of the acceleration on the price appears to be more substantial.
 
 ### Examine assumption
 
-The residuals vs fitted plot is a useful tool in examining the linearity and equal variances assumptions.
+The residuals vs fitted plot is a useful tool in examining the linearity and equal variances assumptions. We are looking for residuals that are distributed normally with expected value 0 and equal variance. Rough inspection of the plot does not reveal major violations of these assumptions.
 ```{r, message=FALSE, warning=FALSE}
 residuals = resid(model2)
 plot(residuals ~ fitted(model2))
 ```
-For normality we can check the qq-plot:
+For normality we can check the qq-plot. All observations seems to be quite close to the theoretical normal distribution, hence from visual inspection we see no real violation of the normality assumption.
 ```{r, message=FALSE, warning=FALSE}
 library(car)
 qqnorm(residuals)
 qqline(residuals)
 ```
-Multicollinearity:
+Multicollinearity is not an issue in our model. Tolerance values smaller than 0.2 indicate a problem; we are nowhere near this range.
 ```{r, message=FALSE, warning=FALSE}
 vif(model2)
 1/vif(model2) # Tolerance
 ```
-Autocorrelation:
-```{r, message=FALSE, warning=FALSE}
-durbinWatsonTest(model2)
+Checking our model for independent errors revealed a violation; there is an autocorrelation significantly different from 0 between our errors.
+```{r}
+show(durbinWatsonTest(model2))
 ```
-
 ### Impact analysis of individual cases
-
+To conclude our analysis we inspect the behavior of individual cases in our model, as some of them might have a disproportionally large influence on the result of the regression. The three methods used to inspect outliers and influential points did not reveal any points that need special attention.
 
 ```{r, message=FALSE, warning=FALSE}
 d$stud.res<-rstudent(model2)
@@ -517,56 +520,105 @@ plot(d$cooks)
 ### Report section for a scientific publication
 In this section we briefly present the results of fitting a linear regression model in order to predict the price of cars using data on their acceleration rate, their fuel efficiency in miles per gallon, and their build year.
 
-First of all we can conclude that a logarithmic transformation was necessary to increase normality of the distribution of the price variable. While the distribution still significantly differs from a normal one (W = 0.973, p = 0.004), it is an improvement over the original distribution (W = 0.853, p = 4.3e-11). Furthermore, the transformation was necessary to justify the choice of performing linear regression, as without it the assumptions for linear regression do not hold, especially the linearity assumption.
+First of all we can conclude that a logarithmic transformation was necessary to increase normality of the distribution of the price variable. While the distribution still significantly differs from a normal one (W = 0.973, p = 0.004), it is an improvement over the original distribution (W = 0.853, p = 4.3e-11). Furthermore, the transformation was necessary to justify the choice of performing linear regression, as without it the assumptions for linear regression do not hold, especially the linearity assumption. 
 
-Inspecting the scatter plots, it becomes clear that a linear relationschip between the natural logarithm of price and the year the car was built is absent. The scatter plots of the other two variables show some indication that a relationship might exist.
+Inspecting the scatter plots, it becomes clear that a linear relationschip between the natural logarithm of price and the year the car was built is absent. The scatter plots of the other two variables show some indication that a relationship might exist. 
 
-Fitting the model revealed that the year variable is indeed not able to explain any additional variance in the price variable on top of the accel and mpg variables (F = 0.088, p = 0.77). Based on this result we decided to exclude the independent variable year from the model. Hence we end up with the following model:
+Fitting the model revealed that the year variable is indeed not able to explain any additional variance in the price variable on top of the accel and mpg variables (F = 0.088, df = 1, p = 0.77). Based on this result we decided to exclude the independent variable year from the model. Hence we end up with the following model:
 
 log(price) = 9.73 + 0.093 x accel - 0.011 x mpg
 
-Checking the assumptions of the linear regression, we found that the distribution of the residuals is normal with expected value 0 and (roughly) constant variance. Testing for independence showed a violation of the assumption (D-W = 1.54, p = 0.008). Violating the independence assumption is quite problematic, but for the sake of the exercise we will continue the analysis. Additionally, no multicollinearity could be found in our model.
+This model quantifies the effect of both predictors on the price (R^2 = 0.52). In order to justify its validity, we checked the assumptions of the linear regression. We found that the distribution of the residuals is normal with expected value 0 and (roughly) constant variance. Testing for independence showed a violation of the assumption (D-W = 1.54, p = 0.008). Violating the independence assumption is quite problematic, but for the sake of the exercise we will continue the analysis. Additionally, no multicollinearity could be found in our model.
 
 Analysis of influential and leverage points revealed no severe outlying cases that undermine the linear regression model.
 
 The interpretation of the coefficients is slightly tricky, since we are dealing with a transformed dependent variable. Instead of additive, the model becomes multiplicative, and each coefficients has to be interpreted as an exponent (i.e. the intercept becomes e^9.73 = 16,815). The standardized coefficients tell us that the effect of one higher standard deviation in the acceleration rate has about twice the effect on the price of one higher standard deviation in the fuel efficiency.
 
-To conclude, we were able to formulate a linear model that is to some extent able to predict the price of a car based on its acceleration rate and its fuel efficiency. Since not all assumptions of linear regression were met, interpretation of the results requires caution.
+To conclude, we were able to formulate a linear model that is to some extent able to predict the price of a car based on its acceleration rate and its fuel efficiency (to be precise, around 50% of the variance in price can be explained by our model). Since not all assumptions of linear regression were met, interpretation of the results requires caution.
+
 
 
 ## Question 4 - Logistic regression analysis
-```{r}
-#include your code and output in the document
-Data <- read.csv("port_taiwan.csv",header=TRUE)
 
-Data$year <- factor(Data$year, levels=c(2003:2006), labels=c("year2003","year2004","year2005","year2006"))
+## Data set
+For this task we will be using a data set with details of all field goal attempts in the NFL season of 2008. The data set contains information in the form of 23 variables for 1039 attempts. We will focus on three of these variables, by investigating the effect of the distance to the goal and the time remaining in the game, on whether or not the attempt was succesful. This setting is graphically depicted in the following conceptual model:
 
-#remove one port so out data can pass as dichotomous
-PortData <- subset(Data,(port != "3"))
-PortData$port <- factor(PortData$port, levels=c(1:2),labels=c("1","2"))
-
-```
-### Conceptual model
-Make a conceptual model underlying this research question
+![Conceptual model of the four considered variables](figures/Conceptual_Model_logistic.png)
 
 ### Logistic regression
-Conduct a logistic regression, examine whether adding individual indicators in the model improves the model compared to Null model. Make a final model with only significant predictor(s). For this model, calculate the pseudo R-square. Calculate the odd ratio for the predictors and their confidence interval
-
+A general linear model was fitted on the data. The predictor values have been rescaled to represent deviations from their mean; this was done to allow for easier interpretation of the estimated coefficients.
 
 ```{r}
-#include your code and output in the document
+library(readr)
+library(pander)
+nfl2008_fga <- read_csv("nfl2008_fga.csv")
+d <- nfl2008_fga
+goal <- factor(d$GOOD)
+
+d$distanceC <- d$distance - mean(d$distance)
+d$timeleftC <- d$timerem - mean(d$timerem)
+
+distance <- d$distanceC
+timeleft <- d$timeleftC
+
+model0 <- glm(goal ~ 1, family = binomial())
+model1 <- glm(goal ~ distance, family = binomial())
+model2 <- glm(goal ~ distance + timeleft, family = binomial())
+
+pander(anova(model0,model1,model2,test="Chisq"),caption="Model comparison for predicting field successful field goals")
+```
+We can observe that model1 fits significantly better than the intercept only model, so the distance from the goal can explain to some extent whether a field goal attempt will be successful. This is, however, not the case for the time remaining in the game. This gives the indication that the time at which a field goal attempt occurs in the game is not important for whether it is successful. We will now look at a summary of the model with the significant predictor distance. Since direct interpretation of the estimates is not straightforward, we will return to their meaning when we consider the odd ratio.
+
+```{r}
+pander(summary(model1),
+       caption = "Summary results of the final model")
+```
+To assess the effectiveness of the model we can first of all look at (pseudo) r^2 measures:
+```{r}
+logisticPseudoR2s <- function(LogModel)
+  #taken from Andy Field et al. book on R, p.334
+{
+  dev <- LogModel$deviance
+  nullDev <- LogModel$null.deviance
+  modelN <- length(LogModel$fitted.values)
+  R.l <- 1 - dev / nullDev
+  R.cs <- 1 - exp(-(nullDev - dev) / modelN)
+  R.n <- R.cs / (1 - (exp(-(nullDev / modelN))))
+  cat("Pseudo R^2 for logistic regression\n")
+  cat("Hosmer and Lemshow R^2:  ", round(R.l, 3), "\n")
+  cat("Cox and Snell R^2:       ", round(R.cs, 3), "\n")
+  cat("Nagelkerke R^2:          ", round(R.n, 3), "\n")
+}
+logisticPseudoR2s(model1)
+```
+The pseudo measures indicate that a fairly low proportion of the variance can be explained by the predictor in the model (10-20%). This is not surprising, since intuitively it would not make sense for this single variable to have great explanatory power. Continuing our analysis, we will further inspect the estimates through calculation of the odds ratio.
+
+```{r}
+o <- exp(model1$coefficients)
+show(o)
+```
+These values can be interpreted as follows. For an average distance from the goal, it is roughly ten times more likely to score than to miss. Furthermore, for each added yard further away than average, the odds to score become less likely by a factor of 0.8. These odds have the following conidence intervals on the 95% confidence level.
+```{r, warning=FALSE, message=FALSE}
+
+pander(exp(confint(model1)),
+       caption = "95% confidence interval of odds ratio")
 ```
 
 ### Crosstable predicted and observed responses
-Make a crosstable of the predicted and observed response
-
-
-```{r}
-#include your code and output in the document
+```{r, warning=FALSE, message=FALSE}
+d$goalpred[fitted(model1) <=0.5] <- 0
+d$goalpred[fitted(model1) > 0.5] <- 1
+goalpred <- factor(d$goalpred)
+CrossTable(d$goalpred, d$GOOD, prop.r=FALSE, prop.c = FALSE, 
+           prop.t = FALSE, 
+           prop.chisq=FALSE, format = "SPSS",  
+           fisher = FALSE, chisq = TRUE, 
+           expected = FALSE, sresid = FALSE)
 ```
+When we compare the predicted success of field goal attempts with our prediction, we observe that our model predicts success in 1026 of the 1039 cases; hence we correctly predict 894 of the 900 successful attempts in the data set. However, we only get 7 out of the 139 unsuccessful attempts correct. From the Chi-square test we can conclude that the results differ significantly from each other.
 
 ### Report section for a scientific publication
-Write a small section for a scientific publication, in which you report the results of the analyses, and explain the conclusions that can be drawn.
+In this exercise we have examined the effect of two predictors on a dichotomous variable: the success of a field goal attempt. The two predictors considered in the analysis are the distance to the goal and the time remaining in the match. We have found that adding the remaining time to the model did not improve the fit (Chi^2 = 0.038, df = 1, p = 0.846), compared to the model with only the distance as a predictor (Chi^2 = 130.8, df = 1, p < 0.0001). The main tangible result of the model can be summarized by the odds ratios. The average odds of scoring a goal (8.07 - 13.44) decrease by a factor of (0.86 - 0.91) for each yard added to the average distance, on a 95% confidence level. The results of the model differed significantly (Chi^2 = 18.6, df = 1, p<0.0001) from the true data, as our model was only able to explain between 10 and 20% of the variance in the data. Nonetheless, our results confirm the intuition that field goal attempts are generally less successful from a larger distance.
 
 # Part 3 - Multilevel model
 
