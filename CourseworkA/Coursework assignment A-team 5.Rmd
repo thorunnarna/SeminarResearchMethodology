@@ -24,7 +24,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ##The motivation for the planned research. 
 (Max 250 words)
 The coffee is today the most consumed drink in the world and it is told to increase your performance and concentration. We want to challenge this idea and verify scientifically if this is a valid idea. We want to test how coffee consumption (and the level of caffeine inside) affect the result of an IQ test.  We are most interesting and seeing what the affect is on TU Delft students like ourselves. So the participants will be recruited from the TU Delft student body.
- # Add that we are doing that on tudelft student
 
 ## The theory underlying the research.  
 (Max 250 words) Preferable based on theories reported in literature
@@ -37,30 +36,28 @@ Nehlig, A. (2010). Is caffeine a cognitive enhancer?. Journal of Alzheimer's Dis
 
 ##Research questions 
 The research question that will be examined in the experiment (or alternatively the hypothesis that will be tested in the experiment)
-Does coffee consumption increases IQ test score #Should we add the caffeine level ?
+How does caffeine level in coffee increases IQ test score ?
 
 ##The related conceptual model 
 
-Independent variable(s) -> caffeine consumption
-Dependent variable -> score at IQ test.
-Mediating variable (at least 1) -> sleepingness feeling
-Moderating variable (at least 1) -> prior coffee consumption habit/caffeine tolerance
+The conceptual model can be found below.
 
 ![Conceptual model](figures/Coffeemodel.png)
 
 ##Experimental Design 
 Note that the study should have a true experimental design
-The experiment is a two groups, post test only, randomized controlled trail. 
+The experiment is a four groups, post test only, randomized controlled trail. Participants will be separated randomly in 4 different groups that will get different amount of caffeine, they will then perform a test and get a score on this test.
 
 ## Experimental procedure 
 Describe how the experiment will be executed step by step
-The participants will be separated into two groups randomly. One group will do the IQ test without any prior coffee consumption while the second group will do the test half an hour after coffee consumption. In the coffe consumption groups, participants will be separated in three subgroups where they will get coffe with different caffeine level. This will allow us to measure the general impact of drinking coffee on an IQ test but it will also allow us to test the difference between each caffeine level.
+
+The participants will be separated into four groups randomly. One group will do the IQ test without any prior coffee consumption while the three other groups will do the test half an hour after coffe consumption where the coffee will have different levels of caffeine according to the groups (20, 100 200 mg). This will allow us to measure the general impact of drinking coffee on an IQ test but it will also allow us to test the difference between each caffeine level.
 
 
 ## Measures
 Describe the measure that will be used
 The Coffe consumption will be measured in ml.
-The perfomance in an IQ test will in a simple integer number on the scale from 0-200 where the mean is around 100.
+The perfomance in an IQ test will be a simple integer number on the scale from 0-200 where the mean is around 100.
 Sleepingness will be given by the participants on the scale from 0-10 where 10 means the highest level of sleepingness.
 The amount of caffeine will be measured in mg.
 Prior coffeedrinking habits will be given by participants. They will be asked how much coffee they typically drink on a normal day.
@@ -73,7 +70,7 @@ Since we are just going to make this experiment on the effects of coffee consump
 
 ## Suggested statistical analyses
 Describe the statistical test you suggest to care out on the collected data
-We will use a one way Analysis of Variance (ANOVA) test between group. Indeed, since the IQ test is follows a gaussian distribution, we just want to compare the mean of each group.
+We will use a one way Analysis of Variance (ANOVA) test between groups. Indeed, since the IQ test is designed to follow a gaussian distribution, we just want to compare the mean of each group.
 
 #Part 2 - Generalized linear models
 
