@@ -33,15 +33,25 @@ summary(modelTeD)
 anova(modelTeDbm,modelTeDTypebm)
 summary(modelTeDType)
 
+
 ## RQ1
 d$Type<-substr(d$model,1,1) #add one extra column to aggregate all B, and all M.
 
+#each baseline
 subsetB1 <-d[which(d$model == 'B1'),]
 subsetB2 <-d[which(d$model == 'B2'),]
 subsetB3 <-d[which(d$model == 'B3'),]
+#each M model
+subsetMN <-d[which(d$model == 'MN'),]
+subsetM1 <-d[which(d$model == 'M1'),]
+subsetM2 <-d[which(d$model == 'M2'),]
+subsetM3 <-d[which(d$model == 'M3'),]
+subsetMF <-d[which(d$model == 'MF'),]
+
 
 subsetB<-d[which(d$model == 'B1'|d$model == 'B2'|d$model == 'B3'),]
 subsetM<-d[which(d$model == 'MN'|d$model == 'M1'|d$model == 'M2'|d$model == 'M3'|d$model == 'MF'),]
+subsetBM <-d[which(d$model != 'S'),]
 subsetS <-d[which(d$model == 'S'),]
 
 
@@ -55,9 +65,32 @@ M<-AggregateByType[(8:14), 3]
 hist(subsetB$score)
 hist(subsetM$score)
 
+#calculate all means
+meanB1 <-mean(subsetB1$score)
+meanB2 <-mean(subsetB2$score)
+meanB3 <-mean(subsetB3$score)
+
+meanMN <-mean(subsetMN$score)
+meanM1 <-mean(subsetM1$score)
+meanM2 <-mean(subsetM2$score)
+meanM3 <-mean(subsetM3$score)
+meanMF <-mean(subsetMF$score)
+
 meanB <-mean(B)
 meanM <-mean(M)
 meanAll <-mean(d$score)
+
+
+#calculate all standard deviation
+stdB1 <-sd(subsetB1$score)
+stdB2 <-sd(subsetB2$score)
+stdB3 <-sd(subsetB3$score)
+
+stdMN <-sd(subsetMN$score)
+stdM1 <-sd(subsetM1$score)
+stdM2 <-sd(subsetM2$score)
+stdM3 <-sd(subsetM3$score)
+stdMF <-sd(subsetMF$score)
 
 stdB <-sd(B)
 stdM <-sd(M)
