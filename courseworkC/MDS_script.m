@@ -24,12 +24,12 @@ G = -0.5 * (I - (1/n)*e) * D * (I - (1/n)*e);
 
 %% Compute resulting points
 
-d = 1;
+d = 6;
 X = zeros(d,n);
 
 for i = 1:n
    for j = 1:d
-      X(j,i) = sqrt(E(j,j))*U(i,j);
+      X(j,i) = E(j,j)*U(i,j);
    end
 end
 
@@ -38,37 +38,34 @@ for j = 1:d
    Z(j,:) = (sqrt(E(j,j))*U(:,j))';
 end
 
-%scatter(X(1,:),X(2,:));
+%% Matlab function for comparison purposes
+[Y,k] = mdscale(D,3);
+Y = Y';
 
 %% Compute stress
-
-S = zeros(n,1);
 stressSum = 0;
 
 % Compute Sum( (d_ij - x_ij)^2 )
 for i = 1:n
-    summation = 0;
     for j = 1:i
-        summation = summation + (D(i,j)-norm(X(:,i)-X(:,j)))^2;
+        stressSum = stressSum + (D(i,j)-norm(X(:,i)-X(:,j)))^2;
     end
-    stressSum = stressSum + summation;
 end
 
 % Compute Sum( (d_ij)^2 )
 total = 0;
 for i = 1:n
-    for j = 1:n
+    for j = 1:i
         total = total + (D(i,j))^2;
     end
 end
-total = total / 2;
 
 % Compute sqrt of ratio
 stress = sqrt(stressSum / total);
 
 
-%%
-
-[Y,k] = mdscale(D,1);
-%scatter(Y(:,1),Y(:,2));
+%% 
+%scatter3(X(1,:),X(2,:),X(3,:));
+%figure(2);
+%scatter3(Y(1,:),Y(2,:),Y(3,:));
 
