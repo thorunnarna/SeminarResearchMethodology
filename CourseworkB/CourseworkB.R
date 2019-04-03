@@ -1,4 +1,4 @@
-setwd("~/Cours/M1/Seminar_Research_Methodology/project2/")
+
 
 d <- read.csv("data.csv")
 d$Type <- factor(d$Type)
@@ -55,11 +55,76 @@ subsetBM <-d[which(d$model != 'S'),]
 subsetS <-d[which(d$model == 'S'),]
 
 
-AggregateByModel<-aggregate(list(d$score), by =list(d$TeD, d$Model) , mean)
+AggregateByModel<-aggregate(list(d$score), by =list(d$TeD, d$model) , mean)
 AggregateByType<-aggregate(list(d$score), by =list(d$TeD, d$Type) , mean)
 
 B<-AggregateByType[(1:7), 3]
 M<-AggregateByType[(8:14), 3]
+
+
+#calculate scores for each trainins set and each test set.
+
+AggregateTrD1PertrainAndType<-aggregate(list(d$score), by =list(d$TrD1, d$Type) , mean)
+AggregateTrD2PertrainAndType<-aggregate(list(d$score), by =list(d$TrD2, d$Type) , mean)
+AggregateTrD3PertrainAndType<-aggregate(list(d$score), by =list(d$TrD3, d$Type) , mean)
+AggregateTrD4PertrainAndType<-aggregate(list(d$score), by =list(d$TrD4, d$Type) , mean)
+AggregateTrD5PertrainAndType<-aggregate(list(d$score), by =list(d$TrD5, d$Type) , mean)
+AggregateTrD6PertrainAndType<-aggregate(list(d$score), by =list(d$TrD6, d$Type) , mean)
+AggregateTrD7PertrainAndType<-aggregate(list(d$score), by =list(d$TrD7, d$Type) , mean)
+AggregateTrD8PertrainAndType<-aggregate(list(d$score), by =list(d$TrD8, d$Type) , mean)
+
+TrD1M<-AggregateTrD1PertrainAndType[3,3]
+TrD2M<-AggregateTrD2PertrainAndType[3,3]
+TrD3M<-AggregateTrD3PertrainAndType[3,3]
+TrD4M<-AggregateTrD4PertrainAndType[3,3]
+TrD5M<-AggregateTrD5PertrainAndType[3,3]
+TrD6M<-AggregateTrD6PertrainAndType[3,3]
+TrD7M<-AggregateTrD7PertrainAndType[3,3]
+TrD8M<-AggregateTrD8PertrainAndType[3,3]
+
+#aggregate on the values we need
+AggregateTrD1PertrainTestAndType<-aggregate(list(d$score), by =list(d$TrD1, d$Type,d$TeD) , mean)
+AggregateTrD2PertrainTestAndType<-aggregate(list(d$score), by =list(d$TrD2, d$Type,d$TeD) , mean)
+AggregateTrD3PertrainTestAndType<-aggregate(list(d$score), by =list(d$TrD3, d$Type,d$TeD) , mean)
+AggregateTrD4PertrainTestAndType<-aggregate(list(d$score), by =list(d$TrD4, d$Type,d$TeD) , mean)
+AggregateTrD5PertrainTestAndType<-aggregate(list(d$score), by =list(d$TrD5, d$Type,d$TeD) , mean)
+AggregateTrD6PertrainTestAndType<-aggregate(list(d$score), by =list(d$TrD6, d$Type,d$TeD) , mean)
+AggregateTrD7PertrainTestAndType<-aggregate(list(d$score), by =list(d$TrD7, d$Type,d$TeD) , mean)
+AggregateTrD8PertrainTestAndType<-aggregate(list(d$score), by =list(d$TrD8, d$Type,d$TeD) , mean)
+
+#select the wvalues we want from that
+subsetTr1 <- AggregateTrD1PertrainTestAndType[which(AggregateTrD1PertrainTestAndType$Group.1 == 1&AggregateTrD1PertrainTestAndType$Group.2 == 'M'),]
+subsetTr2 <- AggregateTrD2PertrainTestAndType[which(AggregateTrD2PertrainTestAndType$Group.1 == 1&AggregateTrD2PertrainTestAndType$Group.2 == 'M'),]
+subsetTr3 <- AggregateTrD3PertrainTestAndType[which(AggregateTrD3PertrainTestAndType$Group.1 == 1&AggregateTrD3PertrainTestAndType$Group.2 == 'M'),]
+subsetTr4 <- AggregateTrD4PertrainTestAndType[which(AggregateTrD4PertrainTestAndType$Group.1 == 1&AggregateTrD4PertrainTestAndType$Group.2 == 'M'),]
+subsetTr5 <- AggregateTrD5PertrainTestAndType[which(AggregateTrD5PertrainTestAndType$Group.1 == 1&AggregateTrD5PertrainTestAndType$Group.2 == 'M'),]
+subsetTr6 <- AggregateTrD6PertrainTestAndType[which(AggregateTrD6PertrainTestAndType$Group.1 == 1&AggregateTrD6PertrainTestAndType$Group.2 == 'M'),]
+subsetTr7 <- AggregateTrD7PertrainTestAndType[which(AggregateTrD7PertrainTestAndType$Group.1 == 1&AggregateTrD7PertrainTestAndType$Group.2 == 'M'),]
+subsetTr8 <- AggregateTrD8PertrainTestAndType[which(AggregateTrD8PertrainTestAndType$Group.1 == 1&AggregateTrD8PertrainTestAndType$Group.2 == 'M'),]
+
+#transform to array so we can plot efficiently
+subTr1<-subsetTr1[(1:7), 4]
+subTr2<-subsetTr2[(1:7), 4]
+subTr3<-subsetTr3[(1:7), 4]
+subTr4<-subsetTr4[(1:7), 4]
+subTr5<-subsetTr5[(1:7), 4]
+subTr6<-subsetTr6[(1:7), 4]
+subTr7<-subsetTr7[(1:7), 4]
+subTr8<-subsetTr8[(1:7), 4]
+
+
+
+
+dev.new(width=6, height=6)
+plot(subTr1,type = "profile",col = "red", xlab = "Testing set", ylab = "Mean score")
+lines(subTr2, type = "o", col = "magenta")
+lines(subTr3, type = "o", col = "green")
+lines(subTr4, type = "o", col = "yellow")
+lines(subTr5, type = "o", col = "orange")
+lines(subTr6, type = "o", col = "pink")
+lines(subTr7, type = "o", col = "purple")
+lines(subTr8, type = "o", col = "black")
+
 
 # take a closer look at the data.
 hist(subsetB$score)
@@ -155,6 +220,8 @@ res = aov(d$score ~ d$model)
 
 summary(res)
 TukeyHSD(res)
+
+
 
 ## RQ3
 d = subset(data, data$model=='S')

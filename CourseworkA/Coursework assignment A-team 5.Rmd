@@ -1,7 +1,7 @@
 ---
 title: "Report Template coursework assignment A - 2018"
 subtitle: "CS4125 Seminar Research Methodology for Data Science"
-author: "??runn Arna ?mard?ttir (4917499), Nathan Buskulic (4947916), Mitchell Deen(4396340)"
+author: " Nathan Buskulic (4947916), Mitchell Deen(4396340),ﬁÛrunn Arna ”mard”ttir (4917499)"
 date: "4/3/2019"
 
 output:
@@ -13,6 +13,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+warning=FALSE
 ```
 
 
@@ -22,11 +23,9 @@ knitr::opts_chunk$set(echo = TRUE)
 #Part 1 - Design and set-up of true experiment 
 
 ##The motivation for the planned research. 
-(Max 250 words)
-The coffee is today the most consumed drink in the world and it is told to increase your performance and concentration. We want to challenge this idea and verify scientifically if this is a valid idea. We want to test how coffee consumption (and the level of caffeine inside) affect the result of an IQ test.  We are most interesting and seeing what the affect is on TU Delft students like ourselves. So the participants will be recruited from the TU Delft student body.
+The coffee is today the most consumed drink in the world and it is told to increase your performance and concentration. We want to challenge this idea and verify scientifically if this is a valid idea. We want to test how caffeine consumption affects the result of an IQ test. We are most interested and seeing what the affect is on TU Delft students like ourselves. So the participants will be recruited from the TU Delft student body.
 
 ## The theory underlying the research.  
-(Max 250 words) Preferable based on theories reported in literature
 There is a large body of literature available on the effects of caffeine on the performance in cognitive tasks. Literature generally supports the idea that coffee improves this performance, see e.g. (Jarvis, 1993; Nehlig, 2010; Rogers et al., 2008). In a brief survey of the relevant literature we did not find any studies specifically addressing students. We would like to investigate this part of the population in more detail.
 
 Jarvis, M. J. (1993). Does caffeine intake enhance absolute levels of cognitive performance?. Psychopharmacology, 110(1-2), 45-52.
@@ -35,41 +34,37 @@ Nehlig, A. (2010). Is caffeine a cognitive enhancer?. Journal of Alzheimer's Dis
 
 
 ##Research questions 
-The research question that will be examined in the experiment (or alternatively the hypothesis that will be tested in the experiment)
+The research question that will be examined in the experiment (or alternatively the hypothesis that will be tested in the experiment)is:
 How does caffeine level in coffee increases IQ test score ?
 
 ##The related conceptual model 
 
 The conceptual model can be found below.
+In the model the caffiene consumption is a independent variable, the IQ test score is a dependent variable, the sleepiness feeling of a person is a mediation vaiable and the coffee consumption habits is a moderating variable. 
 
-![Conceptual model](figures/Coffeemodel.png)
+
+![Caffeine consumption Conceptual model ](figures/Coffeemodel.png)
 
 ##Experimental Design 
-Note that the study should have a true experimental design
-The experiment is a four groups, post test only, randomized controlled trail. Participants will be separated randomly in 4 different groups that will get different amount of caffeine, they will then perform a test and get a score on this test.
+The experiment is a four groups, post test only, randomized controlled trail. Participants will be separated randomly in 4 different groups that will get different amount of caffeine,  after a certain amount of time they will then perform a test and get a score on this test.
 
 ## Experimental procedure 
-Describe how the experiment will be executed step by step
 
 The participants will be separated into four groups randomly. One group will do the IQ test without any prior coffee consumption while the three other groups will do the test half an hour after coffe consumption where the coffee will have different levels of caffeine according to the groups (20, 100 200 mg). This will allow us to measure the general impact of drinking coffee on an IQ test but it will also allow us to test the difference between each caffeine level.
 
 
 ## Measures
-Describe the measure that will be used
 The Coffe consumption will be measured in ml.
 The perfomance in an IQ test will be a simple integer number on the scale from 0-200 where the mean is around 100.
 Sleepingness will be given by the participants on the scale from 0-10 where 10 means the highest level of sleepingness.
 The amount of caffeine will be measured in mg.
-Prior coffeedrinking habits will be given by participants. They will be asked how much coffee they typically drink on a normal day.
-
+Prior coffeedrinking habits will be given by participants. They will be asked how much coffee they typically drink on a normal day. The amount of coffe will be transformed to a scale from 0-10 where 0 is no caffiene consumption and 10 is the highest level of caffiene consumption.
 
 ## Participants
-Describe which participants will recruit in the study and how they will be recruited
 
 Since we are just going to make this experiment on the effects of coffee consumption on students at TU Delft we need to find participants from that group of people. Emails will be sent out to the student body explaining the theory of the experiments and willing volunteers asked to fill in a form. We will try to contact an external company of some sort to get some credit or coupons that we can give to participants as a reward for helping out. 
 
 ## Suggested statistical analyses
-Describe the statistical test you suggest to care out on the collected data
 We will use a one way Analysis of Variance (ANOVA) test between groups. Indeed, since the IQ test is designed to follow a gaussian distribution, we just want to compare the mean of each group.
 
 #Part 2 - Generalized linear models
@@ -78,7 +73,7 @@ We will use a one way Analysis of Variance (ANOVA) test between groups. Indeed, 
 
 
 ### Collecting tweets, and data preparation
-We collected Tweets for the three celebrities Beyonce, Madonna and '' MickaelJackson.
+We collected Tweets for the three celebrities Beyonce, Madonna and Mickael Jackson.
 The code can be found in the markdown file.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, include = FALSE}
@@ -229,18 +224,17 @@ subsetMickaelJackson <-semFrame[which(semFrame$Person == 'MichaelJackson'),]
 
 ```
 ###Conceptual model
+Here below we can see the conceptual model for our research question: Is there a difference in the sentiment of the tweets related to the different celebrities?
 
-Make a conceptual model for the following research question: Is there a difference in the sentiment of the tweets related to the different celebrities?
-
-![Conceptual model](figures/TwitterConceptualModel.png)
+![Celebrity sentiment Conceptual model](figures/TwitterConceptualModel.png)
 
 We can see that the sentiment of tweets related to different celebrity is directly connected to the celebrity itself. 
 Therefor the conceptual model is very simple consisting of two variables, "Celebrity" and "Sentiment".
 
 ### Homogeneity of variance analysis
-Here we will analyze the homogeneity of variance of sentiments of the tweets of the different celebrities
+Here we will analyze the homogeneity of variance of sentiments of the tweets of the different celebrities.
 
-Lets start by looking at how the boxplot looks for each person and the relevant sentiment score. We can already see from looking at the boxplot that the variance does not seem to be the same for all  celibirities. Madonna seems to have the broadest spectrum and the median line hits a bit different places depenfing on the celebrities.
+Lets start by looking at how the boxplot looks for each person and the relevant sentiment score. We can already see from looking at the boxplot that the variance does not seem to be the same for all  celibirities. Madonna seems to have the broadest spectrum and the median line hits a bit different places depending on the celebrities.
 
 ```{r}
 #this was not here in the intermediate report.
@@ -250,7 +244,7 @@ boxplot(score ~ Person, data=semFrame, main="Boxplot of sentiment for each perso
 
 levene = leveneTest( semFrame$score,semFrame$Person, center = median)
 ```
-The Levene test results in a very low p-value $`r levene[1, "Pr(>F)"]`$. Therefore the hypothesis of equal variances is rejected and it is concluded that there is a difference between the variances in the population. Therefore the variance is not considered to be homogeneous.
+The Levene test results in a very low p-value (P=0.000029). Therefore the hypothesis of equal variances is rejected and it is concluded that there is a difference between the variances in the population. Therefore the variance is not considered to be homogeneous.
 
 ### Visual inspection
 Looking at the figures here below we see that the sentiment scores for all the celebrities follow a very similar distribution that looks a lot like a normal distribution.
@@ -287,7 +281,7 @@ plotmeans(score ~ Person, data = semFrame,mean.labels = TRUE,connect = FALSE,yli
  AnovaResults <-anova(model0,model1)
 ```
 Here we have tied two different linear models to fit put outcome. Model0 is a simple model where the sentiment score stands alone, but model1 has the celebrity in there as well. 
-The calculated f-value, F(2,2997) is 31.640 and the p- value is very small and well below .0001. Since the p-value is so small it indicates that the sentiment of tweets is significantly different depending on what celebrity is mentioned in the tweet.
+The calculated f-value, F(2,2997) is 31.640 and the p- value is very small and well below .00001. Since the p-value is so small it indicates that the sentiment of tweets is significantly different depending on what celebrity is mentioned in the tweet.
  
 
 
@@ -308,8 +302,7 @@ According to results here above all of the celebrity pair comparisons have a low
 ### Report section for a scientific publication
 We analysed sentiment scores of tweets for thee dfferent celebrities. We had scores for Madonna (M=0.459, SD=0.897), Beyonce (M=0.132, SD=0.958) and Micheal Jackson (M=0.245, SD=0.944). The means and standard deviations are different between celebrities so they where inspected further.  
 
-A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained  the results (F(2,2997) = 31.65, p <.0001) which states a significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we again got p -values(<<.001 ,0.02 ,<<.001 ) that show us that the difference of scores is signifant depeding on celebrity.
-
+A linear model was fitted on the number of the sentiment score, comparing the difference when taking the relative celbrity in account and not.  We first conducted an Anova test and obtained  the results (F(2,2997) = 31.65, p <<.0001) which states a significant difference in the sentiment, depending on which celebrity it is for. Then A Post Hoc analysis by the means of Bonferroni was conducted. There we again got p -values(<<.0001 ,0.02 ,<<.0001) that show us that the difference of scores is signifant depeding on celebrity.
 
 
 ## Question 2 - Website visits (between groups - Two factors)
@@ -317,7 +310,7 @@ A linear model was fitted on the number of the sentiment score, comparing the di
 ### Conceptual model
 The model can be found in the figure below.
 
-![Model for the webvisit question](figures/Model_Question_2.jpeg){width=50%}
+![Website visits conseptual model](figures/Model_Question_2.jpeg){width=50%}[]
 
 ### Visual inspection
 
@@ -345,7 +338,7 @@ shapiro.test(myData$pages)
 ```
 
 The really small p-value indcates here that there is a high probability that this data do not come from a normal distribution.
-From what we can visually see it seems that the data comes from a Poisson distribution, which is an important information for the Model analysis.
+From what we can visually see it seems that the data comes from a Poisson distribution, which is an important information for the model analysis.
 
 ### Model analysis
 
@@ -400,7 +393,7 @@ contrasts(myData$simple) <- SimpleEff #now we link the two contrasts with the fa
 pander(simpleEffectModel <-glm(pages ~ simple , data = myData, na.action = na.exclude, family = "poisson"), caption = "Simple effect analysis")
 ```
 
-The results of the simple effect analysis shows that while there were a significant difference (P < 0.001) between the two portals in the old version, we cannot find that significant difference anymore in the new version.
+The results of the simple effect analysis shows that while there was a significant difference (P < 0.001) between the two portals in the old version, we cannot find that significant difference anymore in the new version.
 
 ### Report section for a scientific publication
 
@@ -551,6 +544,7 @@ A general linear model was fitted on the data. The predictor values have been re
 ```{r}
 library(readr)
 library(pander)
+library(gmodels)
 nfl2008_fga <- read_csv("nfl2008_fga.csv")
 d <- nfl2008_fga
 goal <- factor(d$GOOD)
@@ -618,7 +612,7 @@ CrossTable(d$goalpred, d$GOOD, prop.r=FALSE, prop.c = FALSE,
 When we compare the predicted success of field goal attempts with our prediction, we observe that our model predicts success in 1026 of the 1039 cases; hence we correctly predict 894 of the 900 successful attempts in the data set. However, we only get 7 out of the 139 unsuccessful attempts correct. From the Chi-square test we can conclude that the results differ significantly from each other.
 
 ### Report section for a scientific publication
-In this exercise we have examined the effect of two predictors on a dichotomous variable: the success of a field goal attempt. The two predictors considered in the analysis are the distance to the goal and the time remaining in the match. We have found that adding the remaining time to the model did not improve the fit (Chi^2 = 0.038, df = 1, p = 0.846), compared to the model with only the distance as a predictor (Chi^2 = 130.8, df = 1, p < 0.0001). The main tangible result of the model can be summarized by the odds ratios. The average odds of scoring a goal (8.07 - 13.44) decrease by a factor of (0.86 - 0.91) for each yard added to the average distance, on a 95% confidence level. The results of the model differed significantly (Chi^2 = 18.6, df = 1, p<0.0001) from the true data, as our model was only able to explain between 10 and 20% of the variance in the data. Nonetheless, our results confirm the intuition that field goal attempts are generally less successful from a larger distance.
+In this exercise we have examined the effect of two predictors on a dichotomous variable: the success of a field goal attempt. The two predictors considered in the analysis are the distance to the goal and the time remaining in the match. We have found that adding the remaining time to the model did not improve the fit ($Chi^2$ = 0.038, df = 1, p = 0.846), compared to the model with only the distance as a predictor ($Chi^2$ = 130.8, df = 1, p < 0.0001). The main tangible result of the model can be summarized by the odds ratios. The average odds of scoring a goal (8.07 - 13.44) decrease by a factor of (0.86 - 0.91) for each yard added to the average distance, on a 95% confidence level. The results of the model differed significantly ($Chi^2$ = 18.6, df = 1, p<0.0001) from the true data, as our model was only able to explain between 10 and 20% of the variance in the data. Nonetheless, our results confirm the intuition that field goal attempts are generally less successful from a larger distance.
 
 # Part 3 - Multilevel model
 
