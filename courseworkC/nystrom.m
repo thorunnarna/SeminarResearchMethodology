@@ -39,7 +39,7 @@ for ld = 1:size(landToTest,2)
 
     % Select pixels that will serve as landmarks
     % (randomly for now)
-    nbLandmark = landToTest(ld)
+    nbLandmark = landToTest(ld) 
     indicesLandmark = sort(randperm(size(initMatrix,1),nbLandmark));
 
 
