@@ -22,7 +22,7 @@ initMatrix = []
 Celeb=1
 Flower = 0
 if Celeb==1
-    imageDir =  'C:/Users/thoru/Downloads/img_align_celeba/img_align_celeba/'
+    imageDir =  './CelebritySubset/'
     ImageDirJpg = imageDir+"*.jpg"
     imagefiles = dir(ImageDirJpg);      
     nfiles = length(imagefiles);    % Number of files found
@@ -39,7 +39,7 @@ if Celeb==1
 
 end
 if Flower==1
-  imageDir =  'C:/Users/thoru/Downloads/102flowers/jpg/'
+  imageDir = './FlowerSubset/'
   ImageDirJpg = imageDir+"*.jpg"
   imagefiles = dir(ImageDirJpg);      
   nfiles = length(imagefiles);    % Number of files found
