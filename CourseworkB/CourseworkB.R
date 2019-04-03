@@ -1,12 +1,12 @@
 
 
 d <- read.csv("data.csv")
+d$Type<-substr(d$model,1,1) #add one extra column to aggregate all B, and all M.
 d$Type <- factor(d$Type)
 str(d)
 
-## Nathan's stuff
+## Exploration of the data
 bd = subset(d,model == 'B1' | model == 'B2' | model == 'B3')
-
 
 mmd = subset(d,model == 'MN' | model == 'M1' | model == 'M2' | model == 'M3' | model == 'MF')
 
@@ -33,9 +33,37 @@ summary(modelTeD)
 anova(modelTeDbm,modelTeDTypebm)
 summary(modelTeDType)
 
+# Separate in three groups
+dataClassification = subset(d, TeD == "TeD1" | TeD == "TeD2" | TeD == "TeD3" | TeD == "TeD4")
+plot(density(dataClassification$score), main="Classification tasks scores")
+
+dataRecommendation = subset(d, TeD == "TeD5")
+plot(density(dataRecommendation$score), main="Recommendation tasks scores")
+
+dataRegression = subset(d, TeD == "TeD6" | TeD == "TeD7")
+plot(density(dataRegression$score), main="Regression tasks scores")
+
+
+# Get all means for Baselines
+mean(subset(d,Type=="B" & TeD=="TeD1")$score)
+mean(subset(d,Type=="B" & TeD=="TeD2")$score)
+mean(subset(d,Type=="B" & TeD=="TeD3")$score)
+mean(subset(d,Type=="B" & TeD=="TeD4")$score)
+mean(subset(d,Type=="B" & TeD=="TeD5")$score)
+mean(subset(d,Type=="B" & TeD=="TeD6")$score)
+mean(subset(d,Type=="B" & TeD=="TeD7")$score)
+
+# get all means for models
+mean(subset(d,Type=="M" & TeD=="TeD1")$score)
+mean(subset(d,Type=="M" & TeD=="TeD2")$score)
+mean(subset(d,Type=="M" & TeD=="TeD3")$score)
+mean(subset(d,Type=="M" & TeD=="TeD4")$score)
+mean(subset(d,Type=="M" & TeD=="TeD5")$score)
+mean(subset(d,Type=="M" & TeD=="TeD6")$score)
+mean(subset(d,Type=="M" & TeD=="TeD7")$score)
+
 
 ## RQ1
-d$Type<-substr(d$model,1,1) #add one extra column to aggregate all B, and all M.
 
 #each baseline
 subsetB1 <-d[which(d$model == 'B1'),]
