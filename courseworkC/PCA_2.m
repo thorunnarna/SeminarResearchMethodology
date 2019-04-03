@@ -11,7 +11,7 @@
 % space.
 
 % -----
-maxImg= 2
+maxImg= 1000
 initMatrix = []
 
 Celeb=1

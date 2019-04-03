@@ -63,33 +63,6 @@ mean(subset(d,Type=="M" & TeD=="TeD6")$score)
 mean(subset(d,Type=="M" & TeD=="TeD7")$score)
 
 
-## RQ1
-
-#each baseline
-subsetB1 <-d[which(d$model == 'B1'),]
-subsetB2 <-d[which(d$model == 'B2'),]
-subsetB3 <-d[which(d$model == 'B3'),]
-#each M model
-subsetMN <-d[which(d$model == 'MN'),]
-subsetM1 <-d[which(d$model == 'M1'),]
-subsetM2 <-d[which(d$model == 'M2'),]
-subsetM3 <-d[which(d$model == 'M3'),]
-subsetMF <-d[which(d$model == 'MF'),]
-
-
-subsetB<-d[which(d$model == 'B1'|d$model == 'B2'|d$model == 'B3'),]
-subsetM<-d[which(d$model == 'MN'|d$model == 'M1'|d$model == 'M2'|d$model == 'M3'|d$model == 'MF'),]
-subsetBM <-d[which(d$model != 'S'),]
-subsetS <-d[which(d$model == 'S'),]
-
-
-AggregateByModel<-aggregate(list(d$score), by =list(d$TeD, d$model) , mean)
-AggregateByType<-aggregate(list(d$score), by =list(d$TeD, d$Type) , mean)
-
-B<-AggregateByType[(1:7), 3]
-M<-AggregateByType[(8:14), 3]
-
-
 #calculate scores for each trainins set and each test set.
 
 AggregateTrD1PertrainAndType<-aggregate(list(d$score), by =list(d$TrD1, d$Type) , mean)
@@ -140,6 +113,31 @@ subTr6<-subsetTr6[(1:7), 4]
 subTr7<-subsetTr7[(1:7), 4]
 subTr8<-subsetTr8[(1:7), 4]
 
+## RQ1
+
+#each baseline
+subsetB1 <-d[which(d$model == 'B1'),]
+subsetB2 <-d[which(d$model == 'B2'),]
+subsetB3 <-d[which(d$model == 'B3'),]
+#each M model
+subsetMN <-d[which(d$model == 'MN'),]
+subsetM1 <-d[which(d$model == 'M1'),]
+subsetM2 <-d[which(d$model == 'M2'),]
+subsetM3 <-d[which(d$model == 'M3'),]
+subsetMF <-d[which(d$model == 'MF'),]
+
+
+subsetB<-d[which(d$model == 'B1'|d$model == 'B2'|d$model == 'B3'),]
+subsetM<-d[which(d$model == 'MN'|d$model == 'M1'|d$model == 'M2'|d$model == 'M3'|d$model == 'MF'),]
+subsetBM <-d[which(d$model != 'S'),]
+subsetS <-d[which(d$model == 'S'),]
+
+
+AggregateByModel<-aggregate(list(d$score), by =list(d$TeD, d$model) , mean)
+AggregateByType<-aggregate(list(d$score), by =list(d$TeD, d$Type) , mean)
+
+B<-AggregateByType[(1:7), 3]
+M<-AggregateByType[(8:14), 3]
 
 
 
