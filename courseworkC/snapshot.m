@@ -5,14 +5,11 @@
 % 3. Get the eigenvalues and eigenvectors
 % 4. Compute the basis vectors
 
-% For testing purposes
-% 5. reconstruct the images by projecting on these new basis vectors.
-
 % We get the matrix.
 % -----
-maxImg = 2000
+maxImg = 200;
 initMatrix = []
-imagefiles = dir('img_align_celeba/*.jpg');      
+imagefiles = dir('CelebritySubset/*.jpg');      
 nfiles = length(imagefiles);    % Number of files found
 for ii=1:maxImg
     currentfilename = imagefiles(ii).name
@@ -40,9 +37,6 @@ for sn = 1:size(snapToTest,2)
     nbSnapshots = snapToTest(sn)
     indicesSnapshots = randperm(maxImg,nbSnapshots);
     snapshotMatrix = initMatrix(:,indicesSnapshots);
-
-    %snapshotMatrix = zeros(size(initMatrix,1), nbSnapshots);
-
 
     % Get the center
     center = mean(initMatrix,2);
@@ -88,20 +82,6 @@ end
 timeSnap
 distancesFromOriginal
 
-%%
-% Testing
-% We project on the new space
-matrixCenter = zeros(size(initMatrix,1), size(initMatrix,2));
-for i = 1:size(initMatrix,2)
-   matrixCenter(:,i) = center; 
-end
-
-%size(centeredPoints' * U * U')
-reconstructedMatrix = (centeredPoints' * U * U')' + matrixCenter;
-
-% We show the mean image
-image = uint8(reshape(reconstructedMatrix(:,100),h,w,d)*255);
-figure, imshow(image)
 
 %% plot
 plot(snapToTest,timeSnap)
