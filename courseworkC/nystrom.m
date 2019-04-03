@@ -6,16 +6,15 @@
 % 4. Compute eigen values and eigenvectors of A which is the top part of
 % CTilda
 % 5. Get the approximate PCA modes
-% 6. Don't forget to repermutate the stuff
+% 6. Don't forget to repermutate
 
-% For testing purposes
-% 5. reconstruct the images by projecting on these new basis vectors.
+
 
 % We get the matrix.
 % -----
 maxImg = 200;
 initMatrix = [];
-imagefiles = dir('img_align_celeba/*.jpg');      
+imagefiles = dir('CelebritySubset/*.jpg');      
 nfiles = length(imagefiles);    % Number of files found
 for ii=1:maxImg
     currentfilename = imagefiles(ii).name
@@ -59,22 +58,15 @@ for ld = 1:size(landToTest,2)
     % We permutate our matrix such that the landmarks are the first l ones
     permutatedPoints = centeredPoints;
     for i=1:nbLandmark
-    %     permutatedPoints([permMat(i,1) permMat(i,2)],:) = permutatedPoints([permMat(i,2) permMat(i,1)],:);
         temp = permutatedPoints(permMat(i,2),:);
         permutatedPoints(permMat(i,2),:) = permutatedPoints(permMat(i,1),:);
         permutatedPoints(permMat(i,1),:) = temp;
     end
 
-    % indicesLandmark(1,1)
-    % centeredPoints(indicesLandmark([1:20]),1)
-    % permutatedPoints([1:20],1)
-
     % We get CTilda
     CTilda = permutatedPoints * permutatedPoints([1:nbLandmark],:)';
     A = CTilda([1:nbLandmark],:);
-    size(A)
     B = CTilda([nbLandmark+1:end],:);
-    size(B)
 
     % We calculate the eigenvectors and eigenvalues
     [V,D] = eig(A);
@@ -109,7 +101,6 @@ for ld = 1:size(landToTest,2)
 
     % We permutate back
     for i=1:nbLandmark
-        %U([permMat(i,2) permMat(i,1)],:) = U([permMat(i,1) permMat(i,2)],:);
         temp = U(permMat(i,2),:);
         U(permMat(i,2),:) = U(permMat(i,1),:);
         U(permMat(i,1),:) = temp;
@@ -140,20 +131,6 @@ end
 
 timeNystrom
 distancesFromOriginalNystrom
-%%
-% Testing
-% We project on the new space
-matrixCenter = zeros(size(initMatrix,1), size(initMatrix,2));
-for i = 1:size(initMatrix,2)
-   matrixCenter(:,i) = center; 
-end
-
-%size(centeredPoints' * U * U')
-reconstructedMatrix = (permutatedPoints' * U * U')' + matrixCenter;
-
-% We show the mean image
-image = uint8(reshape(reconstructedMatrix(:,100),h,w,d)*255);
-figure, imshow(image)
 
 %% plot
 plot(landToTest,timeNystrom)
